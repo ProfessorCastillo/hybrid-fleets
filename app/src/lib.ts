@@ -17,4 +17,4 @@ export function loadInitial(): { params: ScenarioParams; notice?: string } {
     return { params: encoded ? normalizeParams(JSON.parse(encoded)) : paperParams() };
   } catch { return { params: paperParams(), notice: 'This shared scenario was invalid. Paper inputs have been restored.' }; }
 }
-export const sourceUrl = `${import.meta.env.BASE_URL}sources/manuscript.pdf`;
+export const sourceUrl = 'https://onlinelibrary.wiley.com/doi/full/10.1111/jbl.70038';
