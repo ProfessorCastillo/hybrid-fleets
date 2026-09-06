@@ -1,0 +1,3292 @@
+package fleetsizenewsvendor;
+
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Currency;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Random;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.Stack;
+import java.util.Timer;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.Vector;
+import java.awt.Color;
+import java.awt.Font;
+import com.anylogic.engine.connectivity.ResultSet;
+import com.anylogic.engine.connectivity.Statement;
+import com.anylogic.engine.elements.*;
+import com.anylogic.engine.markup.Network;
+import com.anylogic.engine.Position;
+import com.anylogic.engine.markup.PedFlowStatistics;
+import com.anylogic.engine.markup.DensityMap;
+
+
+import static java.lang.Math.*;
+import static com.anylogic.engine.UtilitiesArray.*;
+import static com.anylogic.engine.UtilitiesCollection.*;
+import static com.anylogic.engine.presentation.UtilitiesColor.*;
+import static com.anylogic.engine.HyperArray.*;
+
+import com.anylogic.engine.*;
+import com.anylogic.engine.analysis.*;
+import com.anylogic.engine.connectivity.*;
+import com.anylogic.engine.database.*;
+import com.anylogic.engine.gis.*;
+import com.anylogic.engine.markup.*;
+import com.anylogic.engine.routing.*;
+import com.anylogic.engine.presentation.*;
+import com.anylogic.engine.gui.*;
+import com.anylogic.engine.omniverse_connector.*;
+
+import com.anylogic.libraries.modules.markup_descriptors.*;
+
+import com.querydsl.core.Tuple;
+import com.querydsl.sql.SQLBindings;
+import static fleetsizenewsvendor.DBDescriptor.*;
+
+import java.awt.geom.Arc2D;
+
+import org.apache.commons.math3.distribution.*;
+//import org.reflections.vfs.CommonsVfs2UrlType;
+import dev.nm.stat.distribution.univariate.*;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+ 
+
+public class Main extends Agent
+{
+  // Parameters
+
+  /**
+   * cost per driver of hiring one driver as part of the fleet (all costs included such as fuel and fixed salary costs)
+   */
+  public 
+double  pA;
+
+  /**
+   * Returns default value for parameter <code>pA</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pA_DefaultValue_xjal() {
+    final Main self = this;
+    return 
+2.31 
+;
+  }
+
+  public void set_pA( double value ) {
+    if (value == this.pA) {
+      return;
+    }
+    double _oldValue_xjal = this.pA;
+    this.pA = value;
+    onChange_pA_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pA.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pA()</code> method instead.
+   */
+  protected void onChange_pA() {
+    onChange_pA_xjal( pA );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pA_xjal( double oldValue ) {  
+  }
+
+
+  /**
+   * number of types of different crowdsourced drivers
+   */
+  public 
+int  n;
+
+  /**
+   * Returns default value for parameter <code>n</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public int _n_DefaultValue_xjal() {
+    final Main self = this;
+    return 
+6 
+;
+  }
+
+  public void set_n( int value ) {
+    if (value == this.n) {
+      return;
+    }
+    int _oldValue_xjal = this.n;
+    this.n = value;
+    onChange_n_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter n.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_n()</code> method instead.
+   */
+  protected void onChange_n() {
+    onChange_n_xjal( n );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_n_xjal( int oldValue ) {  
+  }
+
+
+  /**
+   * cost of not delivering r packages (our units are drivers)
+   */
+  public 
+double  pP;
+
+  /**
+   * Returns default value for parameter <code>pP</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pP_DefaultValue_xjal() {
+    final Main self = this;
+    return 
+15 
+;
+  }
+
+  public void set_pP( double value ) {
+    if (value == this.pP) {
+      return;
+    }
+    double _oldValue_xjal = this.pP;
+    this.pP = value;
+    onChange_pP_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pP.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pP()</code> method instead.
+   */
+  protected void onChange_pP() {
+    onChange_pP_xjal( pP );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pP_xjal( double oldValue ) {  
+  }
+
+
+  /**
+   * cost that is saved if one driver is idle (such as fuel)
+   */
+  public 
+double  pV;
+
+  /**
+   * Returns default value for parameter <code>pV</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pV_DefaultValue_xjal() {
+    final Main self = this;
+    return 
+.207*pA 
+;
+  }
+
+  public void set_pV( double value ) {
+    if (value == this.pV) {
+      return;
+    }
+    double _oldValue_xjal = this.pV;
+    this.pV = value;
+    onChange_pV_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pV.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pV()</code> method instead.
+   */
+  protected void onChange_pV() {
+    onChange_pV_xjal( pV );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pV_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pSimDemand;
+
+  /**
+   * Returns default value for parameter <code>pSimDemand</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pSimDemand_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pSimDemand( double value ) {
+    if (value == this.pSimDemand) {
+      return;
+    }
+    double _oldValue_xjal = this.pSimDemand;
+    this.pSimDemand = value;
+    onChange_pSimDemand_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pSimDemand.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pSimDemand()</code> method instead.
+   */
+  protected void onChange_pSimDemand() {
+    onChange_pSimDemand_xjal( pSimDemand );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pSimDemand_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pEmpDmdMean;
+
+  /**
+   * Returns default value for parameter <code>pEmpDmdMean</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pEmpDmdMean_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pEmpDmdMean( double value ) {
+    if (value == this.pEmpDmdMean) {
+      return;
+    }
+    double _oldValue_xjal = this.pEmpDmdMean;
+    this.pEmpDmdMean = value;
+    onChange_pEmpDmdMean_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pEmpDmdMean.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pEmpDmdMean()</code> method instead.
+   */
+  protected void onChange_pEmpDmdMean() {
+    onChange_pEmpDmdMean_xjal( pEmpDmdMean );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pEmpDmdMean_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pEmpDmdSD;
+
+  /**
+   * Returns default value for parameter <code>pEmpDmdSD</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pEmpDmdSD_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pEmpDmdSD( double value ) {
+    if (value == this.pEmpDmdSD) {
+      return;
+    }
+    double _oldValue_xjal = this.pEmpDmdSD;
+    this.pEmpDmdSD = value;
+    onChange_pEmpDmdSD_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pEmpDmdSD.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pEmpDmdSD()</code> method instead.
+   */
+  protected void onChange_pEmpDmdSD() {
+    onChange_pEmpDmdSD_xjal( pEmpDmdSD );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pEmpDmdSD_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pb_1;
+
+  /**
+   * Returns default value for parameter <code>pb_1</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pb_1_DefaultValue_xjal() {
+    final Main self = this;
+    return 
+2 
+;
+  }
+
+  public void set_pb_1( double value ) {
+    if (value == this.pb_1) {
+      return;
+    }
+    double _oldValue_xjal = this.pb_1;
+    this.pb_1 = value;
+    onChange_pb_1_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pb_1.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pb_1()</code> method instead.
+   */
+  protected void onChange_pb_1() {
+    onChange_pb_1_xjal( pb_1 );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pb_1_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pb_2;
+
+  /**
+   * Returns default value for parameter <code>pb_2</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pb_2_DefaultValue_xjal() {
+    final Main self = this;
+    return 
+3 
+;
+  }
+
+  public void set_pb_2( double value ) {
+    if (value == this.pb_2) {
+      return;
+    }
+    double _oldValue_xjal = this.pb_2;
+    this.pb_2 = value;
+    onChange_pb_2_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pb_2.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pb_2()</code> method instead.
+   */
+  protected void onChange_pb_2() {
+    onChange_pb_2_xjal( pb_2 );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pb_2_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pb_3;
+
+  /**
+   * Returns default value for parameter <code>pb_3</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pb_3_DefaultValue_xjal() {
+    final Main self = this;
+    return 
+5 
+;
+  }
+
+  public void set_pb_3( double value ) {
+    if (value == this.pb_3) {
+      return;
+    }
+    double _oldValue_xjal = this.pb_3;
+    this.pb_3 = value;
+    onChange_pb_3_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pb_3.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pb_3()</code> method instead.
+   */
+  protected void onChange_pb_3() {
+    onChange_pb_3_xjal( pb_3 );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pb_3_xjal( double oldValue ) {  
+  }
+
+
+  public 
+int  pB_bar_1;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_1</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public int _pB_bar_1_DefaultValue_xjal() {
+    final Main self = this;
+    return 0;
+  }
+
+  public void set_pB_bar_1( int value ) {
+    if (value == this.pB_bar_1) {
+      return;
+    }
+    int _oldValue_xjal = this.pB_bar_1;
+    this.pB_bar_1 = value;
+    onChange_pB_bar_1_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_1.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_1()</code> method instead.
+   */
+  protected void onChange_pB_bar_1() {
+    onChange_pB_bar_1_xjal( pB_bar_1 );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_1_xjal( int oldValue ) {  
+  }
+
+
+  public 
+int  pB_bar_2;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_2</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public int _pB_bar_2_DefaultValue_xjal() {
+    final Main self = this;
+    return 0;
+  }
+
+  public void set_pB_bar_2( int value ) {
+    if (value == this.pB_bar_2) {
+      return;
+    }
+    int _oldValue_xjal = this.pB_bar_2;
+    this.pB_bar_2 = value;
+    onChange_pB_bar_2_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_2.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_2()</code> method instead.
+   */
+  protected void onChange_pB_bar_2() {
+    onChange_pB_bar_2_xjal( pB_bar_2 );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_2_xjal( int oldValue ) {  
+  }
+
+
+  public 
+int  pB_bar_3;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_3</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public int _pB_bar_3_DefaultValue_xjal() {
+    final Main self = this;
+    return 0;
+  }
+
+  public void set_pB_bar_3( int value ) {
+    if (value == this.pB_bar_3) {
+      return;
+    }
+    int _oldValue_xjal = this.pB_bar_3;
+    this.pB_bar_3 = value;
+    onChange_pB_bar_3_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_3.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_3()</code> method instead.
+   */
+  protected void onChange_pB_bar_3() {
+    onChange_pB_bar_3_xjal( pB_bar_3 );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_3_xjal( int oldValue ) {  
+  }
+
+
+  public 
+double  pCorrelation;
+
+  /**
+   * Returns default value for parameter <code>pCorrelation</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pCorrelation_DefaultValue_xjal() {
+    final Main self = this;
+    return 
+1.0 
+;
+  }
+
+  public void set_pCorrelation( double value ) {
+    if (value == this.pCorrelation) {
+      return;
+    }
+    double _oldValue_xjal = this.pCorrelation;
+    this.pCorrelation = value;
+    onChange_pCorrelation_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pCorrelation.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pCorrelation()</code> method instead.
+   */
+  protected void onChange_pCorrelation() {
+    onChange_pCorrelation_xjal( pCorrelation );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pCorrelation_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pb_4;
+
+  /**
+   * Returns default value for parameter <code>pb_4</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pb_4_DefaultValue_xjal() {
+    final Main self = this;
+    return 
+8 
+;
+  }
+
+  public void set_pb_4( double value ) {
+    if (value == this.pb_4) {
+      return;
+    }
+    double _oldValue_xjal = this.pb_4;
+    this.pb_4 = value;
+    onChange_pb_4_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pb_4.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pb_4()</code> method instead.
+   */
+  protected void onChange_pb_4() {
+    onChange_pb_4_xjal( pb_4 );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pb_4_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pb_5;
+
+  /**
+   * Returns default value for parameter <code>pb_5</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pb_5_DefaultValue_xjal() {
+    final Main self = this;
+    return 
+11 
+;
+  }
+
+  public void set_pb_5( double value ) {
+    if (value == this.pb_5) {
+      return;
+    }
+    double _oldValue_xjal = this.pb_5;
+    this.pb_5 = value;
+    onChange_pb_5_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pb_5.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pb_5()</code> method instead.
+   */
+  protected void onChange_pb_5() {
+    onChange_pb_5_xjal( pb_5 );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pb_5_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pb_6;
+
+  /**
+   * Returns default value for parameter <code>pb_6</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pb_6_DefaultValue_xjal() {
+    final Main self = this;
+    return 
+15 
+;
+  }
+
+  public void set_pb_6( double value ) {
+    if (value == this.pb_6) {
+      return;
+    }
+    double _oldValue_xjal = this.pb_6;
+    this.pb_6 = value;
+    onChange_pb_6_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pb_6.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pb_6()</code> method instead.
+   */
+  protected void onChange_pb_6() {
+    onChange_pb_6_xjal( pb_6 );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pb_6_xjal( double oldValue ) {  
+  }
+
+
+  public 
+int  pB_bar_4;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_4</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public int _pB_bar_4_DefaultValue_xjal() {
+    final Main self = this;
+    return 0;
+  }
+
+  public void set_pB_bar_4( int value ) {
+    if (value == this.pB_bar_4) {
+      return;
+    }
+    int _oldValue_xjal = this.pB_bar_4;
+    this.pB_bar_4 = value;
+    onChange_pB_bar_4_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_4.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_4()</code> method instead.
+   */
+  protected void onChange_pB_bar_4() {
+    onChange_pB_bar_4_xjal( pB_bar_4 );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_4_xjal( int oldValue ) {  
+  }
+
+
+  public 
+int  pB_bar_5;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_5</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public int _pB_bar_5_DefaultValue_xjal() {
+    final Main self = this;
+    return 0;
+  }
+
+  public void set_pB_bar_5( int value ) {
+    if (value == this.pB_bar_5) {
+      return;
+    }
+    int _oldValue_xjal = this.pB_bar_5;
+    this.pB_bar_5 = value;
+    onChange_pB_bar_5_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_5.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_5()</code> method instead.
+   */
+  protected void onChange_pB_bar_5() {
+    onChange_pB_bar_5_xjal( pB_bar_5 );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_5_xjal( int oldValue ) {  
+  }
+
+
+  public 
+int  pB_bar_6;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_6</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public int _pB_bar_6_DefaultValue_xjal() {
+    final Main self = this;
+    return 0;
+  }
+
+  public void set_pB_bar_6( int value ) {
+    if (value == this.pB_bar_6) {
+      return;
+    }
+    int _oldValue_xjal = this.pB_bar_6;
+    this.pB_bar_6 = value;
+    onChange_pB_bar_6_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_6.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_6()</code> method instead.
+   */
+  protected void onChange_pB_bar_6() {
+    onChange_pB_bar_6_xjal( pB_bar_6 );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_6_xjal( int oldValue ) {  
+  }
+
+
+  public 
+int  pSetB_bar_i_CV;
+
+  /**
+   * Returns default value for parameter <code>pSetB_bar_i_CV</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public int _pSetB_bar_i_CV_DefaultValue_xjal() {
+    final Main self = this;
+    return 
+0 
+;
+  }
+
+  public void set_pSetB_bar_i_CV( int value ) {
+    if (value == this.pSetB_bar_i_CV) {
+      return;
+    }
+    int _oldValue_xjal = this.pSetB_bar_i_CV;
+    this.pSetB_bar_i_CV = value;
+    onChange_pSetB_bar_i_CV_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pSetB_bar_i_CV.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pSetB_bar_i_CV()</code> method instead.
+   */
+  protected void onChange_pSetB_bar_i_CV() {
+    onChange_pSetB_bar_i_CV_xjal( pSetB_bar_i_CV );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pSetB_bar_i_CV_xjal( int oldValue ) {  
+  }
+
+
+  /**
+   * 0=low (CV=0.2)<br>
+   * 1=high (CV=1.2)
+   */
+  public 
+int  pSetEmpDmdCV;
+
+  /**
+   * Returns default value for parameter <code>pSetEmpDmdCV</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public int _pSetEmpDmdCV_DefaultValue_xjal() {
+    final Main self = this;
+    return 0;
+  }
+
+  public void set_pSetEmpDmdCV( int value ) {
+    if (value == this.pSetEmpDmdCV) {
+      return;
+    }
+    int _oldValue_xjal = this.pSetEmpDmdCV;
+    this.pSetEmpDmdCV = value;
+    onChange_pSetEmpDmdCV_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pSetEmpDmdCV.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pSetEmpDmdCV()</code> method instead.
+   */
+  protected void onChange_pSetEmpDmdCV() {
+    onChange_pSetEmpDmdCV_xjal( pSetEmpDmdCV );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pSetEmpDmdCV_xjal( int oldValue ) {  
+  }
+
+
+  public 
+double  pB_bar_1_alpha;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_1_alpha</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pB_bar_1_alpha_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pB_bar_1_alpha( double value ) {
+    if (value == this.pB_bar_1_alpha) {
+      return;
+    }
+    double _oldValue_xjal = this.pB_bar_1_alpha;
+    this.pB_bar_1_alpha = value;
+    onChange_pB_bar_1_alpha_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_1_alpha.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_1_alpha()</code> method instead.
+   */
+  protected void onChange_pB_bar_1_alpha() {
+    onChange_pB_bar_1_alpha_xjal( pB_bar_1_alpha );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_1_alpha_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pB_bar_2_alpha;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_2_alpha</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pB_bar_2_alpha_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pB_bar_2_alpha( double value ) {
+    if (value == this.pB_bar_2_alpha) {
+      return;
+    }
+    double _oldValue_xjal = this.pB_bar_2_alpha;
+    this.pB_bar_2_alpha = value;
+    onChange_pB_bar_2_alpha_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_2_alpha.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_2_alpha()</code> method instead.
+   */
+  protected void onChange_pB_bar_2_alpha() {
+    onChange_pB_bar_2_alpha_xjal( pB_bar_2_alpha );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_2_alpha_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pB_bar_3_alpha;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_3_alpha</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pB_bar_3_alpha_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pB_bar_3_alpha( double value ) {
+    if (value == this.pB_bar_3_alpha) {
+      return;
+    }
+    double _oldValue_xjal = this.pB_bar_3_alpha;
+    this.pB_bar_3_alpha = value;
+    onChange_pB_bar_3_alpha_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_3_alpha.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_3_alpha()</code> method instead.
+   */
+  protected void onChange_pB_bar_3_alpha() {
+    onChange_pB_bar_3_alpha_xjal( pB_bar_3_alpha );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_3_alpha_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pB_bar_4_alpha;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_4_alpha</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pB_bar_4_alpha_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pB_bar_4_alpha( double value ) {
+    if (value == this.pB_bar_4_alpha) {
+      return;
+    }
+    double _oldValue_xjal = this.pB_bar_4_alpha;
+    this.pB_bar_4_alpha = value;
+    onChange_pB_bar_4_alpha_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_4_alpha.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_4_alpha()</code> method instead.
+   */
+  protected void onChange_pB_bar_4_alpha() {
+    onChange_pB_bar_4_alpha_xjal( pB_bar_4_alpha );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_4_alpha_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pB_bar_5_alpha;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_5_alpha</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pB_bar_5_alpha_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pB_bar_5_alpha( double value ) {
+    if (value == this.pB_bar_5_alpha) {
+      return;
+    }
+    double _oldValue_xjal = this.pB_bar_5_alpha;
+    this.pB_bar_5_alpha = value;
+    onChange_pB_bar_5_alpha_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_5_alpha.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_5_alpha()</code> method instead.
+   */
+  protected void onChange_pB_bar_5_alpha() {
+    onChange_pB_bar_5_alpha_xjal( pB_bar_5_alpha );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_5_alpha_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pB_bar_6_alpha;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_6_alpha</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pB_bar_6_alpha_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pB_bar_6_alpha( double value ) {
+    if (value == this.pB_bar_6_alpha) {
+      return;
+    }
+    double _oldValue_xjal = this.pB_bar_6_alpha;
+    this.pB_bar_6_alpha = value;
+    onChange_pB_bar_6_alpha_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_6_alpha.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_6_alpha()</code> method instead.
+   */
+  protected void onChange_pB_bar_6_alpha() {
+    onChange_pB_bar_6_alpha_xjal( pB_bar_6_alpha );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_6_alpha_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pB_bar_1_beta;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_1_beta</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pB_bar_1_beta_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pB_bar_1_beta( double value ) {
+    if (value == this.pB_bar_1_beta) {
+      return;
+    }
+    double _oldValue_xjal = this.pB_bar_1_beta;
+    this.pB_bar_1_beta = value;
+    onChange_pB_bar_1_beta_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_1_beta.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_1_beta()</code> method instead.
+   */
+  protected void onChange_pB_bar_1_beta() {
+    onChange_pB_bar_1_beta_xjal( pB_bar_1_beta );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_1_beta_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pB_bar_2_beta;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_2_beta</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pB_bar_2_beta_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pB_bar_2_beta( double value ) {
+    if (value == this.pB_bar_2_beta) {
+      return;
+    }
+    double _oldValue_xjal = this.pB_bar_2_beta;
+    this.pB_bar_2_beta = value;
+    onChange_pB_bar_2_beta_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_2_beta.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_2_beta()</code> method instead.
+   */
+  protected void onChange_pB_bar_2_beta() {
+    onChange_pB_bar_2_beta_xjal( pB_bar_2_beta );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_2_beta_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pB_bar_3_beta;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_3_beta</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pB_bar_3_beta_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pB_bar_3_beta( double value ) {
+    if (value == this.pB_bar_3_beta) {
+      return;
+    }
+    double _oldValue_xjal = this.pB_bar_3_beta;
+    this.pB_bar_3_beta = value;
+    onChange_pB_bar_3_beta_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_3_beta.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_3_beta()</code> method instead.
+   */
+  protected void onChange_pB_bar_3_beta() {
+    onChange_pB_bar_3_beta_xjal( pB_bar_3_beta );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_3_beta_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pB_bar_4_beta;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_4_beta</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pB_bar_4_beta_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pB_bar_4_beta( double value ) {
+    if (value == this.pB_bar_4_beta) {
+      return;
+    }
+    double _oldValue_xjal = this.pB_bar_4_beta;
+    this.pB_bar_4_beta = value;
+    onChange_pB_bar_4_beta_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_4_beta.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_4_beta()</code> method instead.
+   */
+  protected void onChange_pB_bar_4_beta() {
+    onChange_pB_bar_4_beta_xjal( pB_bar_4_beta );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_4_beta_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pB_bar_5_beta;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_5_beta</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pB_bar_5_beta_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pB_bar_5_beta( double value ) {
+    if (value == this.pB_bar_5_beta) {
+      return;
+    }
+    double _oldValue_xjal = this.pB_bar_5_beta;
+    this.pB_bar_5_beta = value;
+    onChange_pB_bar_5_beta_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_5_beta.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_5_beta()</code> method instead.
+   */
+  protected void onChange_pB_bar_5_beta() {
+    onChange_pB_bar_5_beta_xjal( pB_bar_5_beta );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_5_beta_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pB_bar_6_beta;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_6_beta</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pB_bar_6_beta_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pB_bar_6_beta( double value ) {
+    if (value == this.pB_bar_6_beta) {
+      return;
+    }
+    double _oldValue_xjal = this.pB_bar_6_beta;
+    this.pB_bar_6_beta = value;
+    onChange_pB_bar_6_beta_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_6_beta.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_6_beta()</code> method instead.
+   */
+  protected void onChange_pB_bar_6_beta() {
+    onChange_pB_bar_6_beta_xjal( pB_bar_6_beta );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_6_beta_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pB_bar_Com_alpha;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_Com_alpha</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pB_bar_Com_alpha_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pB_bar_Com_alpha( double value ) {
+    if (value == this.pB_bar_Com_alpha) {
+      return;
+    }
+    double _oldValue_xjal = this.pB_bar_Com_alpha;
+    this.pB_bar_Com_alpha = value;
+    onChange_pB_bar_Com_alpha_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_Com_alpha.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_Com_alpha()</code> method instead.
+   */
+  protected void onChange_pB_bar_Com_alpha() {
+    onChange_pB_bar_Com_alpha_xjal( pB_bar_Com_alpha );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_Com_alpha_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pB_bar_Com_beta;
+
+  /**
+   * Returns default value for parameter <code>pB_bar_Com_beta</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pB_bar_Com_beta_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pB_bar_Com_beta( double value ) {
+    if (value == this.pB_bar_Com_beta) {
+      return;
+    }
+    double _oldValue_xjal = this.pB_bar_Com_beta;
+    this.pB_bar_Com_beta = value;
+    onChange_pB_bar_Com_beta_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pB_bar_Com_beta.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pB_bar_Com_beta()</code> method instead.
+   */
+  protected void onChange_pB_bar_Com_beta() {
+    onChange_pB_bar_Com_beta_xjal( pB_bar_Com_beta );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pB_bar_Com_beta_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pAlpha;
+
+  /**
+   * Returns default value for parameter <code>pAlpha</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pAlpha_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pAlpha( double value ) {
+    if (value == this.pAlpha) {
+      return;
+    }
+    double _oldValue_xjal = this.pAlpha;
+    this.pAlpha = value;
+    onChange_pAlpha_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pAlpha.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pAlpha()</code> method instead.
+   */
+  protected void onChange_pAlpha() {
+    onChange_pAlpha_xjal( pAlpha );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pAlpha_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pBeta;
+
+  /**
+   * Returns default value for parameter <code>pBeta</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pBeta_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pBeta( double value ) {
+    if (value == this.pBeta) {
+      return;
+    }
+    double _oldValue_xjal = this.pBeta;
+    this.pBeta = value;
+    onChange_pBeta_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pBeta.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pBeta()</code> method instead.
+   */
+  protected void onChange_pBeta() {
+    onChange_pBeta_xjal( pBeta );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pBeta_xjal( double oldValue ) {  
+  }
+
+
+  public 
+double  pRecordDemandCV;
+
+  /**
+   * Returns default value for parameter <code>pRecordDemandCV</code>.
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  public double _pRecordDemandCV_DefaultValue_xjal() {
+    final Main self = this;
+    return 0.0;
+  }
+
+  public void set_pRecordDemandCV( double value ) {
+    if (value == this.pRecordDemandCV) {
+      return;
+    }
+    double _oldValue_xjal = this.pRecordDemandCV;
+    this.pRecordDemandCV = value;
+    onChange_pRecordDemandCV_xjal( _oldValue_xjal );
+    onChange();
+  }
+
+  /**
+   * Calls "On change" action for parameter pRecordDemandCV.<br>
+   * Note that 'oldValue' in that action will be unavailable if this method is called by user
+   * (current parameter value will be passed as 'oldValue').<br>
+   * Please call <code>set_pRecordDemandCV()</code> method instead.
+   */
+  protected void onChange_pRecordDemandCV() {
+    onChange_pRecordDemandCV_xjal( pRecordDemandCV );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  protected void onChange_pRecordDemandCV_xjal( double oldValue ) {  
+  }
+
+
+  @Override
+  public void setParametersToDefaultValues() {
+    super.setParametersToDefaultValues();
+    pA = _pA_DefaultValue_xjal();
+    n = _n_DefaultValue_xjal();
+    pP = _pP_DefaultValue_xjal();
+    pV = _pV_DefaultValue_xjal();
+    pSimDemand = _pSimDemand_DefaultValue_xjal();
+    pEmpDmdMean = _pEmpDmdMean_DefaultValue_xjal();
+    pEmpDmdSD = _pEmpDmdSD_DefaultValue_xjal();
+    pb_1 = _pb_1_DefaultValue_xjal();
+    pb_2 = _pb_2_DefaultValue_xjal();
+    pb_3 = _pb_3_DefaultValue_xjal();
+    pB_bar_1 = _pB_bar_1_DefaultValue_xjal();
+    pB_bar_2 = _pB_bar_2_DefaultValue_xjal();
+    pB_bar_3 = _pB_bar_3_DefaultValue_xjal();
+    pCorrelation = _pCorrelation_DefaultValue_xjal();
+    pb_4 = _pb_4_DefaultValue_xjal();
+    pb_5 = _pb_5_DefaultValue_xjal();
+    pb_6 = _pb_6_DefaultValue_xjal();
+    pB_bar_4 = _pB_bar_4_DefaultValue_xjal();
+    pB_bar_5 = _pB_bar_5_DefaultValue_xjal();
+    pB_bar_6 = _pB_bar_6_DefaultValue_xjal();
+    pSetB_bar_i_CV = _pSetB_bar_i_CV_DefaultValue_xjal();
+    pSetEmpDmdCV = _pSetEmpDmdCV_DefaultValue_xjal();
+    pB_bar_1_alpha = _pB_bar_1_alpha_DefaultValue_xjal();
+    pB_bar_2_alpha = _pB_bar_2_alpha_DefaultValue_xjal();
+    pB_bar_3_alpha = _pB_bar_3_alpha_DefaultValue_xjal();
+    pB_bar_4_alpha = _pB_bar_4_alpha_DefaultValue_xjal();
+    pB_bar_5_alpha = _pB_bar_5_alpha_DefaultValue_xjal();
+    pB_bar_6_alpha = _pB_bar_6_alpha_DefaultValue_xjal();
+    pB_bar_1_beta = _pB_bar_1_beta_DefaultValue_xjal();
+    pB_bar_2_beta = _pB_bar_2_beta_DefaultValue_xjal();
+    pB_bar_3_beta = _pB_bar_3_beta_DefaultValue_xjal();
+    pB_bar_4_beta = _pB_bar_4_beta_DefaultValue_xjal();
+    pB_bar_5_beta = _pB_bar_5_beta_DefaultValue_xjal();
+    pB_bar_6_beta = _pB_bar_6_beta_DefaultValue_xjal();
+    pB_bar_Com_alpha = _pB_bar_Com_alpha_DefaultValue_xjal();
+    pB_bar_Com_beta = _pB_bar_Com_beta_DefaultValue_xjal();
+    pAlpha = _pAlpha_DefaultValue_xjal();
+    pBeta = _pBeta_DefaultValue_xjal();
+    pRecordDemandCV = _pRecordDemandCV_DefaultValue_xjal();
+  }
+
+  @Override
+  public boolean setParameter(String _name_xjal, Object _value_xjal, boolean _callOnChange_xjal) {
+    switch ( _name_xjal ) {
+    case "pA":
+      if ( _callOnChange_xjal ) {
+        set_pA( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pA = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "n":
+      if ( _callOnChange_xjal ) {
+        set_n( ((Number) _value_xjal).intValue() );
+      } else {
+        n = ((Number) _value_xjal).intValue();
+      }
+      return true;
+    case "pP":
+      if ( _callOnChange_xjal ) {
+        set_pP( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pP = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pV":
+      if ( _callOnChange_xjal ) {
+        set_pV( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pV = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pSimDemand":
+      if ( _callOnChange_xjal ) {
+        set_pSimDemand( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pSimDemand = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pEmpDmdMean":
+      if ( _callOnChange_xjal ) {
+        set_pEmpDmdMean( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pEmpDmdMean = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pEmpDmdSD":
+      if ( _callOnChange_xjal ) {
+        set_pEmpDmdSD( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pEmpDmdSD = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pb_1":
+      if ( _callOnChange_xjal ) {
+        set_pb_1( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pb_1 = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pb_2":
+      if ( _callOnChange_xjal ) {
+        set_pb_2( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pb_2 = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pb_3":
+      if ( _callOnChange_xjal ) {
+        set_pb_3( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pb_3 = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pB_bar_1":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_1( ((Number) _value_xjal).intValue() );
+      } else {
+        pB_bar_1 = ((Number) _value_xjal).intValue();
+      }
+      return true;
+    case "pB_bar_2":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_2( ((Number) _value_xjal).intValue() );
+      } else {
+        pB_bar_2 = ((Number) _value_xjal).intValue();
+      }
+      return true;
+    case "pB_bar_3":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_3( ((Number) _value_xjal).intValue() );
+      } else {
+        pB_bar_3 = ((Number) _value_xjal).intValue();
+      }
+      return true;
+    case "pCorrelation":
+      if ( _callOnChange_xjal ) {
+        set_pCorrelation( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pCorrelation = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pb_4":
+      if ( _callOnChange_xjal ) {
+        set_pb_4( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pb_4 = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pb_5":
+      if ( _callOnChange_xjal ) {
+        set_pb_5( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pb_5 = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pb_6":
+      if ( _callOnChange_xjal ) {
+        set_pb_6( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pb_6 = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pB_bar_4":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_4( ((Number) _value_xjal).intValue() );
+      } else {
+        pB_bar_4 = ((Number) _value_xjal).intValue();
+      }
+      return true;
+    case "pB_bar_5":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_5( ((Number) _value_xjal).intValue() );
+      } else {
+        pB_bar_5 = ((Number) _value_xjal).intValue();
+      }
+      return true;
+    case "pB_bar_6":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_6( ((Number) _value_xjal).intValue() );
+      } else {
+        pB_bar_6 = ((Number) _value_xjal).intValue();
+      }
+      return true;
+    case "pSetB_bar_i_CV":
+      if ( _callOnChange_xjal ) {
+        set_pSetB_bar_i_CV( ((Number) _value_xjal).intValue() );
+      } else {
+        pSetB_bar_i_CV = ((Number) _value_xjal).intValue();
+      }
+      return true;
+    case "pSetEmpDmdCV":
+      if ( _callOnChange_xjal ) {
+        set_pSetEmpDmdCV( ((Number) _value_xjal).intValue() );
+      } else {
+        pSetEmpDmdCV = ((Number) _value_xjal).intValue();
+      }
+      return true;
+    case "pB_bar_1_alpha":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_1_alpha( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pB_bar_1_alpha = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pB_bar_2_alpha":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_2_alpha( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pB_bar_2_alpha = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pB_bar_3_alpha":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_3_alpha( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pB_bar_3_alpha = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pB_bar_4_alpha":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_4_alpha( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pB_bar_4_alpha = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pB_bar_5_alpha":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_5_alpha( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pB_bar_5_alpha = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pB_bar_6_alpha":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_6_alpha( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pB_bar_6_alpha = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pB_bar_1_beta":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_1_beta( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pB_bar_1_beta = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pB_bar_2_beta":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_2_beta( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pB_bar_2_beta = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pB_bar_3_beta":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_3_beta( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pB_bar_3_beta = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pB_bar_4_beta":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_4_beta( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pB_bar_4_beta = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pB_bar_5_beta":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_5_beta( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pB_bar_5_beta = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pB_bar_6_beta":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_6_beta( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pB_bar_6_beta = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pB_bar_Com_alpha":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_Com_alpha( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pB_bar_Com_alpha = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pB_bar_Com_beta":
+      if ( _callOnChange_xjal ) {
+        set_pB_bar_Com_beta( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pB_bar_Com_beta = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pAlpha":
+      if ( _callOnChange_xjal ) {
+        set_pAlpha( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pAlpha = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pBeta":
+      if ( _callOnChange_xjal ) {
+        set_pBeta( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pBeta = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    case "pRecordDemandCV":
+      if ( _callOnChange_xjal ) {
+        set_pRecordDemandCV( ((Number) _value_xjal).doubleValue() );
+      } else {
+        pRecordDemandCV = ((Number) _value_xjal).doubleValue();
+      }
+      return true;
+    default:
+      return super.setParameter( _name_xjal, _value_xjal, _callOnChange_xjal );
+    }
+  }
+
+  @Override
+  public <T> T getParameter(String _name_xjal) {
+    Object _result_xjal;
+    switch ( _name_xjal ) {
+    case "pA": _result_xjal = pA; break;
+    case "n": _result_xjal = n; break;
+    case "pP": _result_xjal = pP; break;
+    case "pV": _result_xjal = pV; break;
+    case "pSimDemand": _result_xjal = pSimDemand; break;
+    case "pEmpDmdMean": _result_xjal = pEmpDmdMean; break;
+    case "pEmpDmdSD": _result_xjal = pEmpDmdSD; break;
+    case "pb_1": _result_xjal = pb_1; break;
+    case "pb_2": _result_xjal = pb_2; break;
+    case "pb_3": _result_xjal = pb_3; break;
+    case "pB_bar_1": _result_xjal = pB_bar_1; break;
+    case "pB_bar_2": _result_xjal = pB_bar_2; break;
+    case "pB_bar_3": _result_xjal = pB_bar_3; break;
+    case "pCorrelation": _result_xjal = pCorrelation; break;
+    case "pb_4": _result_xjal = pb_4; break;
+    case "pb_5": _result_xjal = pb_5; break;
+    case "pb_6": _result_xjal = pb_6; break;
+    case "pB_bar_4": _result_xjal = pB_bar_4; break;
+    case "pB_bar_5": _result_xjal = pB_bar_5; break;
+    case "pB_bar_6": _result_xjal = pB_bar_6; break;
+    case "pSetB_bar_i_CV": _result_xjal = pSetB_bar_i_CV; break;
+    case "pSetEmpDmdCV": _result_xjal = pSetEmpDmdCV; break;
+    case "pB_bar_1_alpha": _result_xjal = pB_bar_1_alpha; break;
+    case "pB_bar_2_alpha": _result_xjal = pB_bar_2_alpha; break;
+    case "pB_bar_3_alpha": _result_xjal = pB_bar_3_alpha; break;
+    case "pB_bar_4_alpha": _result_xjal = pB_bar_4_alpha; break;
+    case "pB_bar_5_alpha": _result_xjal = pB_bar_5_alpha; break;
+    case "pB_bar_6_alpha": _result_xjal = pB_bar_6_alpha; break;
+    case "pB_bar_1_beta": _result_xjal = pB_bar_1_beta; break;
+    case "pB_bar_2_beta": _result_xjal = pB_bar_2_beta; break;
+    case "pB_bar_3_beta": _result_xjal = pB_bar_3_beta; break;
+    case "pB_bar_4_beta": _result_xjal = pB_bar_4_beta; break;
+    case "pB_bar_5_beta": _result_xjal = pB_bar_5_beta; break;
+    case "pB_bar_6_beta": _result_xjal = pB_bar_6_beta; break;
+    case "pB_bar_Com_alpha": _result_xjal = pB_bar_Com_alpha; break;
+    case "pB_bar_Com_beta": _result_xjal = pB_bar_Com_beta; break;
+    case "pAlpha": _result_xjal = pAlpha; break;
+    case "pBeta": _result_xjal = pBeta; break;
+    case "pRecordDemandCV": _result_xjal = pRecordDemandCV; break;
+    default: _result_xjal = super.getParameter( _name_xjal ); break;
+    }
+    return (T) _result_xjal;
+  }
+
+  @AnyLogicInternalCodegenAPI
+  private static String[] _parameterNames_xjal;
+
+  @Override
+  public String[] getParameterNames() {
+    String[] result = _parameterNames_xjal;
+    if (result == null) {
+      List<String> list = new ArrayList<>( Arrays.asList( super.getParameterNames() ) );
+      list.add( "pA" );
+      list.add( "n" );
+      list.add( "pP" );
+      list.add( "pV" );
+      list.add( "pSimDemand" );
+      list.add( "pEmpDmdMean" );
+      list.add( "pEmpDmdSD" );
+      list.add( "pb_1" );
+      list.add( "pb_2" );
+      list.add( "pb_3" );
+      list.add( "pB_bar_1" );
+      list.add( "pB_bar_2" );
+      list.add( "pB_bar_3" );
+      list.add( "pCorrelation" );
+      list.add( "pb_4" );
+      list.add( "pb_5" );
+      list.add( "pb_6" );
+      list.add( "pB_bar_4" );
+      list.add( "pB_bar_5" );
+      list.add( "pB_bar_6" );
+      list.add( "pSetB_bar_i_CV" );
+      list.add( "pSetEmpDmdCV" );
+      list.add( "pB_bar_1_alpha" );
+      list.add( "pB_bar_2_alpha" );
+      list.add( "pB_bar_3_alpha" );
+      list.add( "pB_bar_4_alpha" );
+      list.add( "pB_bar_5_alpha" );
+      list.add( "pB_bar_6_alpha" );
+      list.add( "pB_bar_1_beta" );
+      list.add( "pB_bar_2_beta" );
+      list.add( "pB_bar_3_beta" );
+      list.add( "pB_bar_4_beta" );
+      list.add( "pB_bar_5_beta" );
+      list.add( "pB_bar_6_beta" );
+      list.add( "pB_bar_Com_alpha" );
+      list.add( "pB_bar_Com_beta" );
+      list.add( "pAlpha" );
+      list.add( "pBeta" );
+      list.add( "pRecordDemandCV" );
+      result = list.toArray( new String[ list.size() ] );
+      _parameterNames_xjal = result;
+    }
+    return result;
+  }
+  // Plain Variables
+
+  public 
+double 
+ vFixedCostOwnedFleet;
+  public 
+double 
+ vCostSavedIfOwnedAreIdle;
+  public 
+double 
+ vCostCSDrivers;
+  public 
+double 
+ vCostTotal;
+  public 
+double 
+ vCostPenalty;
+  public 
+double 
+ vR;
+  public 
+double 
+ vHofQ;
+  public 
+String 
+ v_b_i;
+  public 
+String 
+ v_B_i;
+  public 
+String 
+ v_B_bar_i;
+  public 
+int 
+ vQ;
+  public 
+int 
+ vSimDemand;
+  public 
+double 
+ vExpectedDemand;
+
+  // Collection Variables
+  public 
+ArrayList <
+Double > costCSDriverArrayList = new ArrayList<Double>();
+  public 
+ArrayList <
+Integer > numCSTypeCumulArrayList = new ArrayList<Integer>();
+  public 
+ArrayList <
+Integer > numCSTypeIndArrayList = new ArrayList<Integer>();
+  public 
+ArrayList <
+Object > b_bar_i_alpha = new ArrayList<Object>();
+  public 
+ArrayList <
+Object > b_bar_i_beta = new ArrayList<Object>();
+  public 
+ArrayList <
+Object > sdHighCV = new ArrayList<Object>();
+  public 
+ArrayList <
+Integer > sdLowCV = new ArrayList<Integer>();
+
+  @AnyLogicInternalCodegenAPI
+  private static Map<String, IElementDescriptor> elementDesciptors_xjal = createElementDescriptors( Main.class );
+
+  @AnyLogicInternalCodegenAPI
+  @Override
+  public Map<String, IElementDescriptor> getElementDesciptors() {
+    return elementDesciptors_xjal;
+  }
+  @AnyLogicCustomProposalPriority(type = AnyLogicCustomProposalPriority.Type.STATIC_ELEMENT)
+  public static final Scale scale = new Scale( 10.0 );
+
+  @Override
+  public Scale getScale() {
+    return scale;
+  }
+
+
+
+
+  /** Internal constant, shouldn't be accessed by user */
+  @AnyLogicInternalCodegenAPI
+  protected static final int _STATECHART_COUNT_xjal = 0;
+
+
+  // Functions
+
+  void procFleetSizeFixed(  ) { 
+
+//this passage uses binary search to find Q*
+
+int lowerBound = 0;
+int upperBound = (int)pEmpDmdMean+(int)pEmpDmdSD*3;
+int middle = lowerBound + (upperBound - lowerBound)/2;
+vR = (pP - pA);
+vHofQ = 0.0;
+
+while (upperBound - lowerBound > 1) {
+	vHofQ = 0.0;
+	middle = lowerBound + (upperBound - lowerBound)/2;
+	vHofQ += (costCSDriverArrayList.get(0)-0)*F_of_x(middle+0);
+	for (int i = 0; i < n-1; i++) {
+		vHofQ += (costCSDriverArrayList.get(i+1)-costCSDriverArrayList.get(i)) * F_of_x(middle+numCSTypeCumulArrayList.get(i));
+	}
+	vHofQ += (pP-costCSDriverArrayList.get(n-1))*F_of_x(middle+numCSTypeCumulArrayList.get(n-1));
+	traceln("after for loop H(Q): "+vHofQ+" | "+"goal, R: "+vR);
+	traceln("lower, middle, upper bounds: "+lowerBound+","+middle+","+upperBound);
+	if (vHofQ < vR) {
+		lowerBound = middle;
+	} else upperBound = middle;
+			traceln("after if-else lower, middle, upper bounds: "+lowerBound+","+middle+","+upperBound);
+} 
+vQ=middle;
+
+double vHofQLowerBound = 0.0;
+vHofQLowerBound += (costCSDriverArrayList.get(0)-0)*F_of_x(lowerBound+0);
+for (int i = 0; i < n-1; i++) {
+	vHofQLowerBound += (costCSDriverArrayList.get(i+1)-costCSDriverArrayList.get(i)) * F_of_x(lowerBound+numCSTypeCumulArrayList.get(i));
+}
+vHofQLowerBound += (pP-costCSDriverArrayList.get(n-1))*F_of_x(lowerBound+numCSTypeCumulArrayList.get(n-1));
+traceln("vHofQ: "+vHofQ+" | "+"vHofQLowerBound: "+vHofQLowerBound);
+if (vHofQLowerBound < vHofQ && vHofQLowerBound >= vR) {
+	vQ = lowerBound;
+	} else vQ = middle;
+	
+
+if (vHofQ <= vR) {
+	middle += 1;
+	vHofQ = 0.0;
+	vHofQ += (costCSDriverArrayList.get(0)-0)*F_of_x(middle+0);
+	for (int i = 0; i < n-1; i++) {
+		vHofQ += (costCSDriverArrayList.get(i+1)-costCSDriverArrayList.get(i)) * F_of_x(middle+numCSTypeCumulArrayList.get(i));
+	}
+	vHofQ += (pP-costCSDriverArrayList.get(n-1))*F_of_x(middle+numCSTypeCumulArrayList.get(n-1));
+	vQ = middle;
+}
+
+
+traceln("H(Q): "+vHofQ+" | "+"goal, R: "+vR);
+traceln("found Q*: "+vQ);
+
+ 
+  }
+
+  
+double 
+ F_of_x( double x ) { 
+
+//empirical demand = norm(M=196.11, SD=44.56)
+double F_of_x = 0;
+
+//cdf
+/*
+NormalDistribution empNormDist = new org.apache.commons.math3.distribution.NormalDistribution(pEmpDmdMean, pEmpDmdSD);
+F_of_x = empNormDist.cumulativeProbability(x);
+traceln("F_of_x = "+F_of_x);
+*/
+
+TruncatedNormalDistribution testNormDist = new TruncatedNormalDistribution(pEmpDmdMean, pEmpDmdSD, 0, pEmpDmdMean + 3*pEmpDmdSD);
+F_of_x = testNormDist.cdf(x);
+traceln("P(x <= "+x+") = "+F_of_x);
+
+return F_of_x;
+
+ 
+  }
+
+  void procCalcDelivCost(  ) { 
+
+vFixedCostOwnedFleet = 0.0;
+vCostSavedIfOwnedAreIdle = 0.0;
+vCostPenalty = 0.0;
+vCostCSDrivers = 0.0;
+
+int ownedFltCap = vQ;
+int idleAssets = max(0,ownedFltCap-vSimDemand);
+int CSFltCap = (int)numCSTypeCumulArrayList.get(n-1);
+int CSFltDeliveries = min(max(0,vSimDemand-ownedFltCap),CSFltCap);
+int totalCap = ownedFltCap + CSFltCap;
+int missedDeliveries = max(0,vSimDemand-totalCap);
+
+//traceln("ownedFltCap, idleAssets, CSFltCap, CSFltDelivs, totalCap, missedDeliveries");
+//traceln(ownedFltCap+", "+idleAssets+", "+CSFltCap+", "+CSFltDeliveries+", "+totalCap+", "+missedDeliveries);
+
+vFixedCostOwnedFleet = pA*vQ;
+vCostSavedIfOwnedAreIdle = pV*idleAssets;
+vCostPenalty = missedDeliveries*pP;
+
+int[] costCSDriverArray = new int[]{(int)pb_1, (int)pb_2, (int)pb_3, (int)pb_4, (int)pb_5, (int)pb_6};
+int[] numCSTypeIndArray = new int[]{pB_bar_1, pB_bar_2, pB_bar_3, pB_bar_4, pB_bar_5, pB_bar_6};
+int[] numCSTypeCumulArray = new int[]{pB_bar_1,pB_bar_1+pB_bar_2,pB_bar_1+pB_bar_2+pB_bar_3,pB_bar_1+pB_bar_2+pB_bar_3+pB_bar_4,pB_bar_1+pB_bar_2+pB_bar_3+pB_bar_4+pB_bar_5,pB_bar_1+pB_bar_2+pB_bar_3+pB_bar_4+pB_bar_5+pB_bar_6};
+
+int[] indCSDriverCostArray = new int[numCSTypeCumulArray[n-1]];
+
+int num = 0;
+for (int i = 0; i < numCSTypeIndArray.length; i++) {
+	for (int j = 0; j < numCSTypeIndArray[i]; j++) {
+		indCSDriverCostArray[num + j] = costCSDriverArray[i];
+	}
+	num += numCSTypeIndArray[i];
+}
+
+for (int i = 0; i < CSFltDeliveries; i++) {
+	vCostCSDrivers += indCSDriverCostArray[i];
+}
+
+
+vCostTotal = vFixedCostOwnedFleet-vCostSavedIfOwnedAreIdle+vCostCSDrivers+vCostPenalty;
+
+traceln("**************************************************");
+traceln("Empirical Demand M: "+pEmpDmdMean+" | SD: "+pEmpDmdSD);
+traceln("a= "+pA+" | v= "+pV+" | p= "+pP);
+traceln("HofQ: "+vHofQ);
+traceln("Goal: "+vR);
+traceln("Q*: "+vQ);
+traceln("b_i array: "+costCSDriverArrayList);
+traceln("B_bar_i array: "+numCSTypeIndArrayList);
+traceln("B_i array: "+numCSTypeCumulArrayList);
+traceln("Simulated Demand: "+pSimDemand);
+traceln("ownedFltCap, idleAssets, CSFltCap, CSFltDelivs, totalCap, missedDeliveries");
+traceln(ownedFltCap+", "+idleAssets+", "+CSFltCap+", "+CSFltDeliveries+", "+totalCap+", "+missedDeliveries);
+traceln("fixedCost, costSaved, costCSDeliv, costPenalty, totalCost");
+traceln(vFixedCostOwnedFleet+", "+vCostSavedIfOwnedAreIdle+", "+vCostCSDrivers+", "+vCostPenalty+", "+vCostTotal);
+traceln("**************************************************"); 
+  }
+
+  void procRecordData(  ) { 
+
+double dummySupplyCV = (double)pSetB_bar_i_CV / 5;
+
+insertInto(results)
+	.columns(results.emp_dmd_mean, results.emp_dmd_sd, results.a, results.v, results.p, results.n, results.r, results.b_i, results.cap_b_bar_i, results.cap_b_i, results.q_star, results.simulated_demand, results.fixed_private_cost, results.private_idle_savings, results.crowdsourced_cost, results.cost_penalty, results.total_cost, results.correlation, results.alpha, results.beta, results.cs_supply_cv, results.demand_cv, results.scenario)
+	.values(pEmpDmdMean, pEmpDmdSD, pA, pV, pP, n, "1", v_b_i, v_B_bar_i, v_B_i, vQ, pSimDemand, vFixedCostOwnedFleet, vCostSavedIfOwnedAreIdle, vCostCSDrivers, vCostPenalty, vCostTotal, pCorrelation, pAlpha, pBeta, dummySupplyCV, pRecordDemandCV, pEmpDmdMean+","+pEmpDmdSD+","+pSimDemand+","+pA+","+pCorrelation+","+dummySupplyCV+","+pRecordDemandCV)
+	.execute();
+ 
+  }
+
+  void procReset(  ) { 
+
+vR = 0.0;
+vHofQ = 0.0;
+vFixedCostOwnedFleet = 0.0;
+vCostSavedIfOwnedAreIdle = 0.0;
+vCostPenalty = 0.0;
+vCostCSDrivers = 0.0;
+vCostTotal = 0.0;
+
+pB_bar_1 = 0;
+pB_bar_2 = 0;
+pB_bar_3 = 0;
+pB_bar_4 = 0;
+pB_bar_5 = 0;
+pB_bar_6 = 0;
+
+costCSDriverArrayList.clear();
+numCSTypeCumulArrayList.clear();
+numCSTypeIndArrayList.clear();
+b_bar_i_alpha.clear();
+b_bar_i_beta.clear();
+	 
+  }
+
+  void procCreateArrayLists(  ) { 
+
+/*
+//original code
+costCSDriverArrayList.add(pb_1);
+costCSDriverArrayList.add(pb_2);
+costCSDriverArrayList.add(pb_3);
+costCSDriverArrayList.add(pb_4);
+costCSDriverArrayList.add(pb_5);
+costCSDriverArrayList.add(pb_6);
+
+numCSTypeIndArrayList.add(pB_bar_1);
+numCSTypeIndArrayList.add(pB_bar_2);
+numCSTypeIndArrayList.add(pB_bar_3);
+numCSTypeIndArrayList.add(pB_bar_4);
+numCSTypeIndArrayList.add(pB_bar_5);
+numCSTypeIndArrayList.add(pB_bar_6);
+
+numCSTypeCumulArrayList.add(pB_bar_1);
+numCSTypeCumulArrayList.add(pB_bar_1+pB_bar_2);
+numCSTypeCumulArrayList.add(pB_bar_1+pB_bar_2+pB_bar_3);
+numCSTypeCumulArrayList.add(pB_bar_1+pB_bar_2+pB_bar_3+pB_bar_4);
+numCSTypeCumulArrayList.add(pB_bar_1+pB_bar_2+pB_bar_3+pB_bar_4+pB_bar_5);
+numCSTypeCumulArrayList.add(pB_bar_1+pB_bar_2+pB_bar_3+pB_bar_4+pB_bar_5+pB_bar_6);
+
+b_bar_i_alpha.add(pB_bar_1_alpha);
+b_bar_i_alpha.add(pB_bar_2_alpha);
+b_bar_i_alpha.add(pB_bar_3_alpha);
+b_bar_i_alpha.add(pB_bar_4_alpha);
+b_bar_i_alpha.add(pB_bar_5_alpha);
+b_bar_i_alpha.add(pB_bar_6_alpha);
+
+b_bar_i_beta.add(pB_bar_1_beta);
+b_bar_i_beta.add(pB_bar_2_beta);
+b_bar_i_beta.add(pB_bar_3_beta);
+b_bar_i_beta.add(pB_bar_4_beta);
+b_bar_i_beta.add(pB_bar_5_beta);
+b_bar_i_beta.add(pB_bar_6_beta);
+
+traceln("b_i array: "+costCSDriverArrayList);
+traceln("B_bar_i array: "+numCSTypeIndArrayList);
+traceln("B_i array: "+numCSTypeCumulArrayList);
+
+v_b_i = "{"+pb_1+","+pb_2+","+pb_3+","+pb_4+","+pb_5+","+pb_6+"}";
+v_B_i = "{"+pB_bar_1+","+(pB_bar_1+pB_bar_2)+","+(pB_bar_1+pB_bar_2+pB_bar_3)+","+(pB_bar_1+pB_bar_2+pB_bar_3+pB_bar_4)+","+(pB_bar_1+pB_bar_2+pB_bar_3+pB_bar_4+pB_bar_5)+","+(pB_bar_1+pB_bar_2+pB_bar_3+pB_bar_4+pB_bar_5+pB_bar_6)+"}";
+v_B_bar_i = "{"+pB_bar_1+","+pB_bar_2+","+pB_bar_3+","+pB_bar_4+","+pB_bar_5+","+pB_bar_6+"}";
+//vB_bar_i_alphas = "{"+pB_bar_1_alpha+","+pB_bar_2_alpha+","+pB_bar_3_alpha+","+pB_bar_4_alpha+","+pB_bar_5_alpha+","+pB_bar_6_alpha+"}";
+//vB_bar_i_betas = "{"+pB_bar_1_beta+","+pB_bar_2_beta+","+pB_bar_3_beta+","+pB_bar_4_beta+","+pB_bar_5_beta+","+pB_bar_6_beta+"}";
+*/
+
+//modified code 9.6.23
+double[] pb = {pb_1, pb_2, pb_3, pb_4, pb_5, pb_6};
+int[] pB_bar = {pB_bar_1, pB_bar_2, pB_bar_3, pB_bar_4, pB_bar_5, pB_bar_6};
+double[] pB_bar_alpha = {pB_bar_1_alpha, pB_bar_2_alpha, pB_bar_3_alpha, pB_bar_4_alpha, pB_bar_5_alpha, pB_bar_6_alpha};
+double[] pB_bar_beta = {pB_bar_1_beta, pB_bar_2_beta, pB_bar_3_beta, pB_bar_4_beta, pB_bar_5_beta, pB_bar_6_beta};
+
+// Add to ArrayLists
+for (int i = 0; i < pb.length; i++) {
+    costCSDriverArrayList.add(pb[i]);
+    numCSTypeIndArrayList.add(pB_bar[i]);
+    
+    int sum = 0;
+    for (int j = 0; j <= i; j++) {
+        sum += pB_bar[j];
+    }
+    numCSTypeCumulArrayList.add(sum);
+
+    b_bar_i_alpha.add(pB_bar_alpha[i]);
+    b_bar_i_beta.add(pB_bar_beta[i]);
+}
+
+// Logging
+traceln("b_i array: " + costCSDriverArrayList);
+traceln("B_bar_i array: " + numCSTypeIndArrayList);
+traceln("B_i array: " + numCSTypeCumulArrayList);
+
+// For v_b_i
+StringBuilder sb = new StringBuilder("{");
+for (int i = 0; i < pb.length; i++) {
+    sb.append(pb[i]);
+    if (i < pb.length - 1) {
+        sb.append(",");
+    }
+}
+sb.append("}");
+v_b_i = sb.toString();
+
+// For v_B_i
+sb = new StringBuilder("{");
+int[] bArray = numCSTypeCumulArrayList.stream().mapToInt(i -> i).toArray();
+for (int i = 0; i < bArray.length; i++) {
+    sb.append(bArray[i]);
+    if (i < bArray.length - 1) {
+        sb.append(",");
+    }
+}
+sb.append("}");
+v_B_i = sb.toString();
+
+// For v_B_bar_i
+sb = new StringBuilder("{");
+for (int i = 0; i < pB_bar.length; i++) {
+    sb.append(pB_bar[i]);
+    if (i < pB_bar.length - 1) {
+        sb.append(",");
+    }
+}
+sb.append("}");
+v_B_bar_i = sb.toString();
+ 
+  }
+
+  void procRunModel(  ) { 
+
+procSetEmpDmd();
+procFleetSizeCS();
+procCreateArrayLists();
+procFleetSizeFixed();
+procCalcDelivCost();
+procRecordData();
+procReset();
+
+ 
+  }
+
+  /**
+   * CV	Mean	SD	Var	alpha	beta<br>
+   * 0	0.33	0.0001	0.00000001	 7,296,299.67 	 14,813,699.33 <br>
+   * 0.2	0.33	0.066	0.004356	 16.42 	 33.34 <br>
+   * 0.4	0.33	0.132	0.017424	 3.86 	 7.83 <br>
+   * 0.6	0.33	0.198	0.039204	 1.53 	 3.11 <br>
+   * 0.8	0.33	0.264	0.069696	 0.72 	 1.46 
+   */
+  void procFleetSizeCS(  ) { 
+
+/*
+//set alpha and beta parameters for B_bar_i distributions, i.e. size of CS fleet
+double ZeroCValpha = 67000000; //zero CV
+double LowCValpha = 16.42; //low CV; cv=0.2
+double MedCValpha = 3.86; //med CV; cv=0.4
+double HighCValpha = 1.53; //high CV; cv=0.6
+double HighestCValpha = 0.72; //cv=0.8
+
+double ZeroCVbeta = 136030302; //zero CV
+double LowCVbeta = 33.34; //low CV; cv=0.05
+double MedCVbeta = 7.83; //med CV; cv=0.2
+double HighCVbeta = 3.11; //high CV; cv=1.0
+double HighestCVbeta = 1.46; //cv=0.8
+
+double betaMultiplier = 10000;
+
+if (pSetB_bar_i_CV == 0) {
+	pAlpha = ZeroCValpha;
+	pBeta = ZeroCVbeta;
+	double commonDist = Math.round(beta(ZeroCValpha, ZeroCVbeta, 0, 1)*betaMultiplier)/100; //the 4th distribution, common to all types
+	pB_bar_1 = (int)((1-pCorrelation)*Math.round(beta(ZeroCValpha, ZeroCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_2 = (int)((1-pCorrelation)*Math.round(beta(ZeroCValpha, ZeroCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_3 = (int)((1-pCorrelation)*Math.round(beta(ZeroCValpha, ZeroCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_4 = (int)((1-pCorrelation)*Math.round(beta(ZeroCValpha, ZeroCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_5 = (int)((1-pCorrelation)*Math.round(beta(ZeroCValpha, ZeroCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_6 = (int)((1-pCorrelation)*Math.round(beta(ZeroCValpha, ZeroCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+} 
+else if (pSetB_bar_i_CV == 1) {
+	pAlpha = LowCValpha;
+	pBeta = LowCVbeta;
+	double commonDist = Math.round(beta(LowCValpha, LowCVbeta, 0, 1)*betaMultiplier)/100; //the 4th distribution, common to all types
+	pB_bar_1 = (int)((1-pCorrelation)*Math.round(beta(LowCValpha, LowCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_2 = (int)((1-pCorrelation)*Math.round(beta(LowCValpha, LowCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_3 = (int)((1-pCorrelation)*Math.round(beta(LowCValpha, LowCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_4 = (int)((1-pCorrelation)*Math.round(beta(LowCValpha, LowCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_5 = (int)((1-pCorrelation)*Math.round(beta(LowCValpha, LowCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_6 = (int)((1-pCorrelation)*Math.round(beta(LowCValpha, LowCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+}
+else if (pSetB_bar_i_CV == 2) {
+	pAlpha = MedCValpha;
+	pBeta = MedCVbeta;
+	double commonDist = Math.round(beta(MedCValpha, MedCVbeta, 0, 1)*betaMultiplier)/100; //the 4th distribution, common to all types
+	pB_bar_1 = (int)((1-pCorrelation)*Math.round(beta(MedCValpha, MedCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_2 = (int)((1-pCorrelation)*Math.round(beta(MedCValpha, MedCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_3 = (int)((1-pCorrelation)*Math.round(beta(MedCValpha, MedCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_4 = (int)((1-pCorrelation)*Math.round(beta(MedCValpha, MedCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_5 = (int)((1-pCorrelation)*Math.round(beta(MedCValpha, MedCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_6 = (int)((1-pCorrelation)*Math.round(beta(MedCValpha, MedCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+}
+else if (pSetB_bar_i_CV == 3) {
+	pAlpha = HighCValpha;
+	pBeta = HighCVbeta;
+	double commonDist = Math.round(beta(HighCValpha, HighCVbeta, 0, 1)*betaMultiplier)/100; //the 4th distribution, common to all types
+	pB_bar_1 = (int)((1-pCorrelation)*Math.round(beta(HighCValpha, HighCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_2 = (int)((1-pCorrelation)*Math.round(beta(HighCValpha, HighCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_3 = (int)((1-pCorrelation)*Math.round(beta(HighCValpha, HighCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_4 = (int)((1-pCorrelation)*Math.round(beta(HighCValpha, HighCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_5 = (int)((1-pCorrelation)*Math.round(beta(HighCValpha, HighCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_6 = (int)((1-pCorrelation)*Math.round(beta(HighCValpha, HighCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+}
+else {
+	pAlpha = HighestCValpha;
+	pBeta = HighestCVbeta;
+	double commonDist = Math.round(beta(HighestCValpha, HighestCVbeta, 0, 1)*betaMultiplier)/100; //the 4th distribution, common to all types
+	pB_bar_1 = (int)((1-pCorrelation)*Math.round(beta(HighestCValpha, HighestCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_2 = (int)((1-pCorrelation)*Math.round(beta(HighestCValpha, HighestCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_3 = (int)((1-pCorrelation)*Math.round(beta(HighestCValpha, HighestCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_4 = (int)((1-pCorrelation)*Math.round(beta(HighestCValpha, HighestCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_5 = (int)((1-pCorrelation)*Math.round(beta(HighestCValpha, HighestCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+	pB_bar_6 = (int)((1-pCorrelation)*Math.round(beta(HighestCValpha, HighestCVbeta, 0, 1)*betaMultiplier)/100+(pCorrelation)*commonDist);
+}
+
+*/
+
+////////////////////////////////////////////////
+//set CS fleet size using new java code 9.6.2023
+////////////////////////////////////////////////
+
+
+// Set alpha and beta parameters for B_bar_i distributions
+double[] alphas = {
+    67000000,   // zero CV
+    16.42,     // low CV; cv=0.2
+    3.86,      // med CV; cv=0.4
+    1.53,      // high CV; cv=0.6
+    0.72       // cv=0.8
+};
+
+double[] betas = {
+    136030302,  // zero CV
+    33.34,     // low CV; cv=0.05
+    7.83,      // med CV; cv=0.2
+    3.11,      // high CV; cv=1.0
+    1.46       // cv=0.8
+};
+
+double betaMultiplier = 10000;
+
+// Ensure pSetB_bar_i_CV is within bounds
+int index = Math.min(alphas.length - 1, Math.max(0, pSetB_bar_i_CV));
+
+pAlpha = alphas[index];
+pBeta = betas[index];
+
+// Calculate commonDist
+double commonDist = Math.round(beta(pAlpha, pBeta, 0, 1) * betaMultiplier) / 100;
+
+// Set pB_bar_i values
+int[] pB_bar = new int[6];
+for (int i = 0; i < pB_bar.length; i++) {
+    double individualBeta = Math.round(beta(pAlpha, pBeta, 0, 1) * betaMultiplier) / 100;
+    pB_bar[i] = (int) ((1 - pCorrelation) * individualBeta + pCorrelation * commonDist);
+}
+
+// If you need individual variables instead of an array:
+pB_bar_1 = pB_bar[0];
+pB_bar_2 = pB_bar[1];
+pB_bar_3 = pB_bar[2];
+pB_bar_4 = pB_bar[3];
+pB_bar_5 = pB_bar[4];
+pB_bar_6 = pB_bar[5];
+ 
+  }
+
+  void procSetEmpDmd(  ) { 
+
+//this procedure sets the historical demand Mean and SD to predefined combinations
+double[] meansArray = new double[]{198,396,792,1584,198,396,792,1584,198,396,792,1584,198,396,792,1584,198,396,792,1584};
+double[] SDsArray = new double[]{0.0001,0.0001,0.0001,0.0001,39.6,79.2,158.4,316.8,79.2,158.4,316.8,633.6,118.8,237.6,475.2,950.4,158.4,316.8,633.6,1267.2};
+
+pEmpDmdMean = meansArray[pSetEmpDmdCV];
+pEmpDmdSD = SDsArray[pSetEmpDmdCV];
+pRecordDemandCV = pEmpDmdSD / pEmpDmdMean; 
+  }
+private double _datasetUpdateTime_xjal() {
+	return time();
+}
+  // View areas
+  public ViewArea _origin_VA = new ViewArea( this, "[Origin]", 0, 0, 1000.0, 600.0 );
+  @Override
+  @AnyLogicInternalCodegenAPI
+  public int getViewAreas(Map<String, ViewArea> _output) {
+    if ( _output != null ) {
+      _output.put( "_origin_VA", this._origin_VA );
+    }
+    return 1 + super.getViewAreas( _output );
+  }
+  @AnyLogicInternalCodegenAPI
+  protected static final Font _editbox2_Font = new Font("Dialog", 0, 11 );
+  @AnyLogicInternalCodegenAPI
+  protected static final Font _editbox3_Font = _editbox2_Font;
+  @AnyLogicInternalCodegenAPI
+  protected static final Font _editbox4_Font = _editbox2_Font;
+  @AnyLogicInternalCodegenAPI
+  protected static final Font _editbox5_Font = _editbox2_Font;
+  @AnyLogicInternalCodegenAPI
+  protected static final Font _text_Font = new Font("SansSerif", 0, 14 );
+  @AnyLogicInternalCodegenAPI
+  protected static final Font _text1_Font = _text_Font;
+  @AnyLogicInternalCodegenAPI
+  protected static final Font _text2_Font = _text_Font;
+  @AnyLogicInternalCodegenAPI
+  protected static final Font _text3_Font = _text_Font;
+  @AnyLogicInternalCodegenAPI
+  protected static final Font _text15_Font = _text_Font;
+  @AnyLogicInternalCodegenAPI
+  protected static final Font _text16_Font = _text_Font;
+  @AnyLogicInternalCodegenAPI
+  protected static final Font _text17_Font = _text_Font;
+  @AnyLogicInternalCodegenAPI
+  protected static final Font _text18_Font = _text_Font;
+  @AnyLogicInternalCodegenAPI
+  protected static final Font _text34_Font = new Font("SansSerif", 0, 12 );
+  @AnyLogicInternalCodegenAPI
+  protected static final Font _text35_Font = _text34_Font;
+  @AnyLogicInternalCodegenAPI
+  protected static final Font _text36_Font = _text34_Font;
+  @AnyLogicInternalCodegenAPI
+  protected static final Font _text4_Font = _text_Font;
+  @AnyLogicInternalCodegenAPI
+  protected static final Font _text19_Font = _text_Font;
+  @AnyLogicInternalCodegenAPI
+  protected static final int _text = 1;
+  @AnyLogicInternalCodegenAPI
+  protected static final int _text1 = 2;
+  @AnyLogicInternalCodegenAPI
+  protected static final int _text2 = 3;
+  @AnyLogicInternalCodegenAPI
+  protected static final int _text3 = 4;
+  @AnyLogicInternalCodegenAPI
+  protected static final int _text15 = 5;
+  @AnyLogicInternalCodegenAPI
+  protected static final int _text16 = 6;
+  @AnyLogicInternalCodegenAPI
+  protected static final int _text17 = 7;
+  @AnyLogicInternalCodegenAPI
+  protected static final int _text18 = 8;
+  @AnyLogicInternalCodegenAPI
+  protected static final int _text34 = 9;
+  @AnyLogicInternalCodegenAPI
+  protected static final int _text35 = 10;
+  @AnyLogicInternalCodegenAPI
+  protected static final int _text36 = 11;
+  @AnyLogicInternalCodegenAPI
+  protected static final int _text4 = 12;
+  @AnyLogicInternalCodegenAPI
+  protected static final int _text19 = 13;
+  @AnyLogicInternalCodegenAPI
+  protected static final int _editbox2 = 14;
+  @AnyLogicInternalCodegenAPI
+  protected static final int _editbox3 = 15;
+  @AnyLogicInternalCodegenAPI
+  protected static final int _editbox4 = 16;
+  @AnyLogicInternalCodegenAPI
+  protected static final int _editbox5 = 17;
+
+  /** Internal constant, shouldn't be accessed by user */
+  @AnyLogicInternalCodegenAPI
+  protected static final int _SHAPE_NEXT_ID_xjal = 18;
+
+  @AnyLogicInternalCodegenAPI
+  public boolean isPublicPresentationDefined() {
+    return true;
+  }
+
+  @AnyLogicInternalCodegenAPI
+  public boolean isEmbeddedAgentPresentationVisible( Agent _a ) {
+    return super.isEmbeddedAgentPresentationVisible( _a );
+  }
+  @AnyLogicInternalCodegenAPI
+  private void _initialize_level_xjal() {
+	  level.addAll(editbox2, editbox3, editbox4, text, text1, text2, text3, text15, text16, text17, text18, text34, text35, text36, editbox5, text4, text19);
+  }
+
+
+  @Override
+  @AnyLogicInternalCodegenAPI
+  public void executeShapeControlAction( int _shape, int index, String value ) {
+    switch( _shape ) {
+      case _editbox2:
+        set_pA( Double.parseDouble(value) );
+        break;
+      case _editbox3:
+        set_pV( Double.parseDouble(value) );
+        break;
+      case _editbox4:
+        set_pP( Double.parseDouble(value) );
+        break;
+      case _editbox5:
+        set_pCorrelation( Double.parseDouble(value) );
+        break;
+      default:
+        super.executeShapeControlAction( _shape, index, value );
+        break;
+    }
+  }
+        
+  @Override
+  @AnyLogicInternalCodegenAPI
+  public String getShapeControlDefaultValueString( int _shape, int index ) {
+    switch(_shape) {
+      case _editbox2: return String.valueOf(
+pA 
+);
+      case _editbox3: return String.valueOf(
+pV 
+);
+      case _editbox4: return String.valueOf(
+pP 
+);
+      case _editbox5: return String.valueOf(
+pCorrelation 
+);
+      default: return super.getShapeControlDefaultValueString( _shape, index );
+    }
+  }
+
+  
+  /**
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  private void _editbox2_SetDynamicParams_xjal( ShapeTextField shape ) {
+    {
+      @AnyLogicInternalCodegenAPI
+      double _min = 
+0.10 ;
+      @AnyLogicInternalCodegenAPI
+      double _max = 
+30.0 ;
+      shape.setRange( _min, _max );
+    }
+  }
+  
+  protected ShapeTextField editbox2;
+  
+  /**
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  private void _editbox3_SetDynamicParams_xjal( ShapeTextField shape ) {
+    {
+      @AnyLogicInternalCodegenAPI
+      double _min = 
+0.01 ;
+      @AnyLogicInternalCodegenAPI
+      double _max = 
+50.0 ;
+      shape.setRange( _min, _max );
+    }
+  }
+  
+  protected ShapeTextField editbox3;
+  
+  /**
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  private void _editbox4_SetDynamicParams_xjal( ShapeTextField shape ) {
+    {
+      @AnyLogicInternalCodegenAPI
+      double _min = 
+.01 ;
+      @AnyLogicInternalCodegenAPI
+      double _max = 
+100.0 ;
+      shape.setRange( _min, _max );
+    }
+  }
+  
+  protected ShapeTextField editbox4;
+  
+  /**
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  private void _editbox5_SetDynamicParams_xjal( ShapeTextField shape ) {
+    {
+      @AnyLogicInternalCodegenAPI
+      double _min = 
+0 ;
+      @AnyLogicInternalCodegenAPI
+      double _max = 
+1 ;
+      shape.setRange( _min, _max );
+    }
+  }
+  
+  protected ShapeTextField editbox5;
+  protected ShapeText text;
+  protected ShapeText text1;
+  protected ShapeText text2;
+  protected ShapeText text3;
+  protected ShapeText text15;
+  
+  /**
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  private void _text16_SetDynamicParams_xjal( ShapeText shape ) {
+    shape.setText(
+"v = "+pV 
+);
+  }
+  
+  protected ShapeText text16;
+  protected ShapeText text17;
+  protected ShapeText text18;
+  
+  /**
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  private void _text34_SetDynamicParams_xjal( ShapeText shape ) {
+    shape.setText(
+"b_i = {$"+pb_1+", $"+pb_2+", $"+pb_3+", $"+pb_4+", $"+pb_5+", $"+pb_6+"}" 
+);
+  }
+  
+  protected ShapeText text34;
+  
+  /**
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  private void _text35_SetDynamicParams_xjal( ShapeText shape ) {
+    shape.setText(
+"B_i = {"+pB_bar_1+", "+(pB_bar_1+pB_bar_2)+", "+(pB_bar_1+pB_bar_2+pB_bar_3)+", "+(pB_bar_1+pB_bar_2+pB_bar_3+pb_4)+", "+(pB_bar_1+pB_bar_2+pB_bar_3+pB_bar_4+pB_bar_5)+", "+(pB_bar_1+pB_bar_2+pB_bar_3+pB_bar_4+pB_bar_5+pB_bar_6)+"}" 
+);
+  }
+  
+  protected ShapeText text35;
+  
+  /**
+   * <i>This method should not be called by user</i>
+   */
+  @AnyLogicInternalCodegenAPI
+  private void _text36_SetDynamicParams_xjal( ShapeText shape ) {
+    shape.setText(
+"B_bar_i = {"+pB_bar_1+", "+pB_bar_2+", "+pB_bar_3+", "+pB_bar_4+", "+pB_bar_5+", "+pB_bar_6+"}" 
+);
+  }
+  
+  protected ShapeText text36;
+  protected ShapeText text4;
+  protected ShapeText text19;
+  protected com.anylogic.engine.markup.Level level;
+
+  private com.anylogic.engine.markup.Level[] _getLevels_xjal;
+
+  @Override
+  public com.anylogic.engine.markup.Level[] getLevels() {
+    return _getLevels_xjal;
+  }
+
+  @AnyLogicInternalCodegenAPI
+  private void _createPersistentElementsBP0_xjal() {
+    editbox2 = new ShapeTextField(
+Main.this, true,400.0, 30.0,
+			100.0, 40.0,
+            white, black, true, _editbox2_Font,
+            ShapeControl.TYPE_DOUBLE, 0.10
+            , 30.0
+ ) {
+	
+      @Override
+	
+      public void updateDynamicProperties() {
+	
+      _editbox2_SetDynamicParams_xjal( this );
+	
+      super.updateDynamicProperties();
+	
+      }
+
+      @Override
+      @AnyLogicInternalCodegenAPI
+      public void action() {
+        executeShapeControlAction( _editbox2, 0, value );
+      }
+
+      @Override
+      public void setValueToDefault() {
+		setText( getShapeControlDefaultValueString( _editbox2, 0 ) );
+      }
+    };
+    editbox3 = new ShapeTextField(
+Main.this, true,400.0, 70.0,
+			100.0, 40.0,
+            white, black, true, _editbox3_Font,
+            ShapeControl.TYPE_DOUBLE, 0.01
+            , 50.0
+ ) {
+	
+      @Override
+	
+      public void updateDynamicProperties() {
+	
+      _editbox3_SetDynamicParams_xjal( this );
+	
+      super.updateDynamicProperties();
+	
+      }
+
+      @Override
+      @AnyLogicInternalCodegenAPI
+      public void action() {
+        executeShapeControlAction( _editbox3, 0, value );
+      }
+
+      @Override
+      public void setValueToDefault() {
+		setText( getShapeControlDefaultValueString( _editbox3, 0 ) );
+      }
+    };
+    editbox4 = new ShapeTextField(
+Main.this, true,400.0, 110.0,
+			100.0, 40.0,
+            white, black, true, _editbox4_Font,
+            ShapeControl.TYPE_DOUBLE, .01
+            , 100.0
+ ) {
+	
+      @Override
+	
+      public void updateDynamicProperties() {
+	
+      _editbox4_SetDynamicParams_xjal( this );
+	
+      super.updateDynamicProperties();
+	
+      }
+
+      @Override
+      @AnyLogicInternalCodegenAPI
+      public void action() {
+        executeShapeControlAction( _editbox4, 0, value );
+      }
+
+      @Override
+      public void setValueToDefault() {
+		setText( getShapeControlDefaultValueString( _editbox4, 0 ) );
+      }
+    };
+    editbox5 = new ShapeTextField(
+Main.this, true,400.0, 150.0,
+			100.0, 40.0,
+            white, black, true, _editbox5_Font,
+            ShapeControl.TYPE_DOUBLE, 0
+            , 1
+ ) {
+	
+      @Override
+	
+      public void updateDynamicProperties() {
+	
+      _editbox5_SetDynamicParams_xjal( this );
+	
+      super.updateDynamicProperties();
+	
+      }
+
+      @Override
+      @AnyLogicInternalCodegenAPI
+      public void action() {
+        executeShapeControlAction( _editbox5, 0, value );
+      }
+
+      @Override
+      public void setValueToDefault() {
+		setText( getShapeControlDefaultValueString( _editbox5, 0 ) );
+      }
+    };
+    text = new ShapeText(
+        SHAPE_DRAW_2D, true,70.0, 40.0, 0.0, 0.0,
+        black,"a, cost per delivery with owned fleet ($/delivery) = ",
+        _text_Font, ALIGNMENT_LEFT );
+    text1 = new ShapeText(
+        SHAPE_DRAW_2D, true,100.0, 80.0, 0.0, 0.0,
+        black,"v, cost saved if one driver is idle ($/delivery) = ",
+        _text1_Font, ALIGNMENT_LEFT );
+    text2 = new ShapeText(
+        SHAPE_DRAW_2D, true,80.0, 120.0, 0.0, 0.0,
+        black,"p, cost of not delivering r packages ($/delivery) = ",
+        _text2_Font, ALIGNMENT_LEFT );
+    text3 = new ShapeText(
+        SHAPE_DRAW_2D, true,420.0, 220.0, 0.0, 0.0,
+        black,"n, number of types of CS drivers = ",
+        _text3_Font, ALIGNMENT_LEFT );
+    text15 = new ShapeText(
+        SHAPE_DRAW_2D, true,570.0, 40.0, 0.0, 0.0,
+        black,"a = $2.31",
+        _text15_Font, ALIGNMENT_LEFT );
+    text16 = new ShapeText(
+        SHAPE_DRAW_2D, true,570.0, 80.0, 0.0, 0.0,
+        black,"v = $0.48",
+        _text16_Font, ALIGNMENT_LEFT ) {
+	
+      @Override
+	
+      public void updateDynamicProperties() {
+	
+      _text16_SetDynamicParams_xjal( this );
+	
+      super.updateDynamicProperties();
+	
+      }
+    };
+    text17 = new ShapeText(
+        SHAPE_DRAW_2D, true,570.0, 120.0, 0.0, 0.0,
+        black,"p = $15",
+        _text17_Font, ALIGNMENT_LEFT );
+    text18 = new ShapeText(
+        SHAPE_DRAW_2D, true,550.0, 10.0, 0.0, 0.0,
+        black,"Defaults",
+        _text18_Font, ALIGNMENT_LEFT );
+    text34 = new ShapeText(
+        SHAPE_DRAW_2D, true,30.0, 290.0, 0.0, 0.0,
+        black,"b_i",
+        _text34_Font, ALIGNMENT_LEFT ) {
+	
+      @Override
+	
+      public void updateDynamicProperties() {
+	
+      _text34_SetDynamicParams_xjal( this );
+	
+      super.updateDynamicProperties();
+	
+      }
+    };
+    text35 = new ShapeText(
+        SHAPE_DRAW_2D, true,30.0, 350.0, 0.0, 0.0,
+        black,"B_i",
+        _text35_Font, ALIGNMENT_LEFT ) {
+	
+      @Override
+	
+      public void updateDynamicProperties() {
+	
+      _text35_SetDynamicParams_xjal( this );
+	
+      super.updateDynamicProperties();
+	
+      }
+    };
+    text36 = new ShapeText(
+        SHAPE_DRAW_2D, true,10.0, 320.0, 0.0, 0.0,
+        black,"B_bar_i",
+        _text36_Font, ALIGNMENT_LEFT ) {
+	
+      @Override
+	
+      public void updateDynamicProperties() {
+	
+      _text36_SetDynamicParams_xjal( this );
+	
+      super.updateDynamicProperties();
+	
+      }
+    };
+    text4 = new ShapeText(
+        SHAPE_DRAW_2D, true,50.0, 160.0, 0.0, 0.0,
+        black,"correlation between B_bar_i distributions = ",
+        _text4_Font, ALIGNMENT_LEFT );
+    text19 = new ShapeText(
+        SHAPE_DRAW_2D, true,630.0, 160.0, 0.0, 0.0,
+        black,"corr = {1.0, 0.75, 0.5, 0.25, 0.0}",
+        _text19_Font, ALIGNMENT_LEFT );
+  }
+
+  @AnyLogicInternalCodegenAPI
+  private void _createPersistentElementsAP0_xjal() {
+  }
+
+  @AnyLogicInternalCodegenAPI
+  private void _createPersistentElementsBS0_xjal() {
+  }
+
+
+
+  // Static initialization of persistent elements
+  private void instantiatePersistentElements_xjal() {
+    level = new com.anylogic.engine.markup.Level(this, "level", SHAPE_DRAW_2D3D, 0.0, true, true);  			
+	_getLevels_xjal = new com.anylogic.engine.markup.Level[] { 
+      level };
+    _createPersistentElementsBP0_xjal();
+  }
+  protected ShapeTopLevelPresentationGroup presentation;
+  protected ShapeModelElementsGroup icon; 
+
+  @Override
+  @AnyLogicInternalCodegenAPI
+  public ShapeTopLevelPresentationGroup getPresentationShape() {
+    return presentation;
+  }
+
+  @Override
+  @AnyLogicInternalCodegenAPI
+  public ShapeModelElementsGroup getModelElementsShape() {
+    return icon;
+  }
+
+	
+
+
+  /**
+   * Constructor
+   */
+  public Main( Engine engine, Agent owner, AgentList<? extends Main> ownerPopulation ) {
+    super( engine, owner, ownerPopulation );
+    instantiateBaseStructureThis_xjal();
+  }
+
+  @AnyLogicInternalCodegenAPI
+  public void onOwnerChanged_xjal() {
+    super.onOwnerChanged_xjal();
+    setupReferences_xjal();
+  }
+
+  @AnyLogicInternalCodegenAPI
+  public void instantiateBaseStructure_xjal() {
+    super.instantiateBaseStructure_xjal();
+    instantiateBaseStructureThis_xjal();
+  }
+
+  @AnyLogicInternalCodegenAPI
+  private void instantiateBaseStructureThis_xjal() {
+	instantiatePersistentElements_xjal();
+    setupReferences_xjal();
+  }
+
+  @AnyLogicInternalCodegenAPI
+  private void setupReferences_xjal() {
+  }
+
+  /**
+   * Simple constructor. Please add created agent to some population by calling goToPopulation() function.
+   */
+  public Main() {
+  }
+
+  /**
+   * Simple constructor. Please add created agent to some population by calling goToPopulation() function.
+   */
+  public Main( double pA, int n, double pP, double pV, double pSimDemand, double pEmpDmdMean, double pEmpDmdSD, double pb_1, double pb_2, double pb_3, int pB_bar_1, int pB_bar_2, int pB_bar_3, double pCorrelation, double pb_4, double pb_5, double pb_6, int pB_bar_4, int pB_bar_5, int pB_bar_6, int pSetB_bar_i_CV, int pSetEmpDmdCV, double pB_bar_1_alpha, double pB_bar_2_alpha, double pB_bar_3_alpha, double pB_bar_4_alpha, double pB_bar_5_alpha, double pB_bar_6_alpha, double pB_bar_1_beta, double pB_bar_2_beta, double pB_bar_3_beta, double pB_bar_4_beta, double pB_bar_5_beta, double pB_bar_6_beta, double pB_bar_Com_alpha, double pB_bar_Com_beta, double pAlpha, double pBeta, double pRecordDemandCV ) {
+    markParametersAreSet();
+    this.pA = pA;
+    this.n = n;
+    this.pP = pP;
+    this.pV = pV;
+    this.pSimDemand = pSimDemand;
+    this.pEmpDmdMean = pEmpDmdMean;
+    this.pEmpDmdSD = pEmpDmdSD;
+    this.pb_1 = pb_1;
+    this.pb_2 = pb_2;
+    this.pb_3 = pb_3;
+    this.pB_bar_1 = pB_bar_1;
+    this.pB_bar_2 = pB_bar_2;
+    this.pB_bar_3 = pB_bar_3;
+    this.pCorrelation = pCorrelation;
+    this.pb_4 = pb_4;
+    this.pb_5 = pb_5;
+    this.pb_6 = pb_6;
+    this.pB_bar_4 = pB_bar_4;
+    this.pB_bar_5 = pB_bar_5;
+    this.pB_bar_6 = pB_bar_6;
+    this.pSetB_bar_i_CV = pSetB_bar_i_CV;
+    this.pSetEmpDmdCV = pSetEmpDmdCV;
+    this.pB_bar_1_alpha = pB_bar_1_alpha;
+    this.pB_bar_2_alpha = pB_bar_2_alpha;
+    this.pB_bar_3_alpha = pB_bar_3_alpha;
+    this.pB_bar_4_alpha = pB_bar_4_alpha;
+    this.pB_bar_5_alpha = pB_bar_5_alpha;
+    this.pB_bar_6_alpha = pB_bar_6_alpha;
+    this.pB_bar_1_beta = pB_bar_1_beta;
+    this.pB_bar_2_beta = pB_bar_2_beta;
+    this.pB_bar_3_beta = pB_bar_3_beta;
+    this.pB_bar_4_beta = pB_bar_4_beta;
+    this.pB_bar_5_beta = pB_bar_5_beta;
+    this.pB_bar_6_beta = pB_bar_6_beta;
+    this.pB_bar_Com_alpha = pB_bar_Com_alpha;
+    this.pB_bar_Com_beta = pB_bar_Com_beta;
+    this.pAlpha = pAlpha;
+    this.pBeta = pBeta;
+    this.pRecordDemandCV = pRecordDemandCV;
+  }
+
+  @Override
+  @AnyLogicInternalCodegenAPI
+  public void doCreate() {
+    super.doCreate();
+    // Assigning initial values for plain variables
+    setupPlainVariables_Main_xjal();
+Map<String, Set<?>> usdMapping = getRootAgent().ext(ExtRootModelAgent.class).getCustomObject(OmniverseHelper.USD_CONTEXT_COLLECTION_KEY,
+()-> new LinkedHashMap<String, Set<?>>());
+    // Dynamic initialization of persistent elements
+    _createPersistentElementsAP0_xjal();
+	_initialize_level_xjal();
+    level.initialize();
+    presentation = new ShapeTopLevelPresentationGroup( Main.this, true, 0, 0, 0, 0 , level );
+    presentation.getConfiguration3D().setBackgroundColor( silver );
+    icon = new ShapeModelElementsGroup( Main.this, getElementProperty( "fleetsizenewsvendor.Main.icon", IElementDescriptor.MODEL_ELEMENT_DESCRIPTORS )  );
+    icon.setIconOffsets( 0.0, 0.0 );
+
+
+    // Space setup
+    {
+      double _x_xjal = 
+500 
+;
+      double _y_xjal = 
+500 
+;
+      double _z_xjal = 
+0 
+;
+      setupSpace( _x_xjal, _y_xjal, _z_xjal );
+    }
+    disableSteps();
+    setNetworkUserDefined();
+    setLayoutType( LAYOUT_USER_DEFINED );
+	 // Port connectors with non-replicated objects
+    // Creating replicated embedded objects
+    setupInitialConditions_xjal( Main.class );
+    // Dynamic initialization of persistent elements
+    _createPersistentElementsBS0_xjal();
+    editbox2.setValueToDefault();
+    editbox3.setValueToDefault();
+    editbox4.setValueToDefault();
+    editbox5.setValueToDefault();
+  }
+
+  @Override
+  @AnyLogicInternalCodegenAPI
+  public void doStart() {
+    super.doStart();
+  }
+
+  @AnyLogicInternalCodegenAPI
+  public void onStartup() {
+    super.onStartup();
+
+procRunModel(); 
+ }
+
+  /**
+   * Assigning initial values for plain variables<br>
+   * <em>This method isn't designed to be called by user and may be removed in future releases.</em>
+   */
+  @AnyLogicInternalCodegenAPI
+  public void setupPlainVariables_xjal() {
+    setupPlainVariables_Main_xjal();
+  }
+
+  /**
+   * Assigning initial values for plain variables<br>
+   * <em>This method isn't designed to be called by user and may be removed in future releases.</em>
+   */
+  @AnyLogicInternalCodegenAPI
+  private void setupPlainVariables_Main_xjal() {
+    vQ = 
+1 
+;
+    vSimDemand = 
+(int)pSimDemand 
+;
+    vExpectedDemand = 
+196.1188 
+;
+  }
+
+  // User API -----------------------------------------------------
+  @AnyLogicInternalCodegenAPI
+  public static LinkToAgentAnimationSettings _connections_commonAnimationSettings_xjal = new LinkToAgentAnimationSettingsImpl( false, black, 1.0, LINE_STYLE_SOLID, ARROW_NONE, 0.0 );
+
+  public LinkToAgentCollection<Agent, Agent> connections = new LinkToAgentStandardImpl<Agent, Agent>(this, _connections_commonAnimationSettings_xjal);
+  @Override
+  public LinkToAgentCollection<? extends Agent, ? extends Agent> getLinkToAgentStandard_xjal() {
+    return connections;
+  }
+
+
+  @AnyLogicInternalCodegenAPI
+  public void drawLinksToAgents(boolean _underAgents_xjal, LinkToAgentAnimator _animator_xjal) {
+    super.drawLinksToAgents(_underAgents_xjal, _animator_xjal);
+    if ( _underAgents_xjal ) {
+      _animator_xjal.drawLink( this, connections, true, true );
+    }
+  }
+
+  public AgentList<? extends Main> getPopulation() {
+    return (AgentList<? extends Main>) super.getPopulation();
+  }
+
+  public List<? extends Main> agentsInRange( double distance ) {
+    return (List<? extends Main>) super.agentsInRange( distance );
+  }
+
+
+}
