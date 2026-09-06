@@ -1,16 +1,18 @@
-# Fleet Lab implementation plan
+# Fleet Lab application plan
 
 ## Purpose
-Let a reader understand and interact with the adapted two-stage newsvendor model, configure a real scenario, and replay the resulting capacity allocations in an animated district. The original manuscript and Java export remain untouched.
 
-1. **Reconcile sources.** Read the manuscript (including S1–S5), Java calculation routines, and PRD. Record implementation assumptions and the difference between a conditional optimum and an advance fleet commitment in DECISIONS.md.
-2. **Build and verify the model.** Implement a dependency-free, seeded TypeScript core: normal and Beta sampling, reliability-adjusted costs, cheap-tier transformation, critical fractile, cost accounting, and aggregate statistics. Compute both the paper's per-supply conditional optimum and one fixed capacity from the supply-averaged fractile.
-3. **Create a useful sandbox.** Offer uncertainty sliders, demand and cost inputs, editable supply tiers, presets, fixed/private/crowdsourced/custom fleet comparison, a cost curve, capacity ladder, distribution, and CSV/share/save controls. Run expensive calculations in cancellable workers.
-4. **Animate an actual draw.** Replay sampled demand and tier allocations on a procedural city map. Support pause, reset, speed, seeking, and selection of a new day. Scale the animated packets to exact model allocation totals. Explain that geography and animation timing are illustrative and reliability enters expected costs.
-5. **Connect back to the research.** Include factor sweeps, all five propositions, equations, source links, assumptions, and transparent reproduction diagnostics. Precompute paper-convention experiments and never substitute published values for calculated results.
-6. **Verify and deliver.** Test mathematical identities, samplers, optimizer bounds, fixed-policy fairness, conservation, reproducibility, invalid inputs, browser flows, mobile layout, and production output. Save the results, model decisions, and run/deployment instructions.
+Help readers explore delivery capacity planning, configure scenarios, and watch resulting allocations in an animated district. The companion draws on *Last Mile Delivery Capacity Planning with Two-Sided Uncertainty* by Castillo, Posner, Sodero, and Zinn.
 
-## Scope decisions
-React + TypeScript + Vite, Recharts, custom CSS, Canvas for the animated district, one worker per active calculation. No account, backend, paid map API, external assets, or real shipment data needed. The requested animation is a new educational layer. Live routing, ETAs, congestion, service promises, and actual success/failure simulation are outside the paper's model.
+1. **Organize the model inputs.** Use the manuscript, Java export, and product requirements to define controls, default scenarios, and calculations. Document app settings in `DECISIONS.md`.
+2. **Build the simulation.** Implement seeded demand and supply sampling, reliability-adjusted costs, conditional capacity selection, fixed fleet planning, allocation, and summary statistics.
+3. **Create the sandbox.** Provide sliders, editable supply tiers, presets, fleet comparisons, charts, and save/share/export controls. Run calculations in browser workers.
+4. **Animate a day.** Display weighted delivery batches on a procedural district map with playback controls and day selection.
+5. **Connect the research.** Include the five propositions, experiment controls, equations, manuscript, and authorship. Precompute experiment datasets for fast loading.
+6. **Verify and publish.** Check numerical routines, accounting identities, seeded behavior, inputs, browser interactions, responsive layout, and the production build. Deploy through GitHub Pages.
 
-The draft PRD is guidance, not a claim of completed acceptance. Published results are the validation targets; remaining mismatches are implementation work. Deployment setup is provided; publishing is separate from the local build.
+## Technology and scope
+
+React, TypeScript, Vite, Recharts, CSS, and Canvas. The app runs without user accounts, a backend, paid map services, or real shipment data. Roads, destinations, and playback timing are part of the app's educational animation.
+
+Future app features include historical CSV calibration, 3PL scenarios, route planning, and localization.

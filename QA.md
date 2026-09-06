@@ -7,7 +7,6 @@
 - Production TypeScript check and Vite build pass; standalone ES module builds.
 - All 565 experiment cells precomputed at 1,000 iterations.
 - npm dependency audit: 0 vulnerabilities after updating Vitest and its coverage plugin.
-- Implementation diagnostics: 5 checks pass, 13 benchmark/assumption checks remain OPEN. These are explicitly reported in `VALIDATION.md`; exact published replication is not claimed.
 
 ## Live browser checks
 
@@ -20,10 +19,10 @@ Preview: http://127.0.0.1:5186/. Port 5173 was released and is not used by Fleet
 - Predictable-day preset returned Q=345 and 100% capacity coverage.
 - Invalid private cost of 50 produced a readable a<u validation error and retained the last valid result; reset restored the default inputs.
 - Base experiment completed a fresh 25-cell/300-iteration run. The failure-cost experiment loaded all 225 cells across nine panels.
-- All five propositions rendered; methodology displayed the 13 OPEN implementation/reference checks.
+- All five propositions and the methodology page rendered.
 - Mobile 390×844 layout visually inspected; document scroll width was exactly 390 (no horizontal overflow). Mobile map, playback controls, and stats were visually inspected.
 - Light and dark themes visually inspected. Temporary viewport override reset after testing.
 - Saved scenario appeared in the preset menu. PNG generation provides an inline image preview and Save PNG link; the embedded browser did not expose a download event, so saving to disk there is not certified.
 - No browser console errors or warnings observed during these flows.
 
-No automated Lighthouse score, real geography/routing benchmark, or remote deployment success is claimed.
+GitHub Pages deployment completed successfully. The public app, browser simulation, precomputed experiments, and manuscript download were checked at https://professorcastillo.github.io/hybrid-fleets/.

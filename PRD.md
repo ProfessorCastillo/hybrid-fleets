@@ -1,6 +1,6 @@
 # PRD: Two-Sided Uncertainty Capacity Planner
 
-Interactive web app implementing the adapted two-stage newsvendor (NVP2S) model from *Last Mile Delivery Capacity Planning with Two-Sided Uncertainty* (Castillo et al., JBL, minor revision). The app lets a user set demand uncertainty, crowdsourced (CD) labor supply uncertainty, supply correlation, and cost parameters, then runs the Monte Carlo simulation optimization in the browser and shows the optimal private delivery (PD) capacity Q\*, the cost breakdown, and the paper's experimental sweeps.
+Interactive web app implementing the adapted two-stage newsvendor (NVP2S) model from *Last Mile Delivery Capacity Planning with Two-Sided Uncertainty* (Castillo, Posner, Sodero, and Zinn, Journal of Business Logistics). The app lets a user set demand uncertainty, crowdsourced (CD) labor supply uncertainty, supply correlation, and cost parameters, then runs the Monte Carlo simulation optimization in the browser and shows the optimal private delivery (PD) capacity Q\*, the cost breakdown, and the paper's experimental sweeps.
 
 **Status:** v1.0 draft for agent handoff
 **Owner:** Vince Castillo
@@ -10,7 +10,7 @@ Interactive web app implementing the adapted two-stage newsvendor (NVP2S) model 
 
 ## 1. Purpose and audience
 
-The paper argues that picking delivery capacity by lowest unit cost is wrong when both demand and CD supply are uncertain. The app makes that argument tangible: a manager or student moves a slider and watches Q\* move the "wrong" way.
+The paper examines capacity planning under uncertain delivery demand and crowd supply. The app lets managers and students explore how uncertainty changes capacity choices and costs.
 
 Primary uses, in priority order:
 
@@ -22,32 +22,23 @@ Non-goals for v1: multi-market planning, routing, service-level modeling, user a
 
 ---
 
-## 2. Source materials and how to use them
+## 2. Research sources and app settings
 
-| Source | Role | Trust level |
-|---|---|---|
-| `Two_Sided_Uncertainty___JBL_Minor_Revision_Decision.pdf` | Canonical model spec (Section 3, Appendix S1, S2, S3, S4, S5) and all calibration values (Tables 2, 4, 5, S2.1, S3.1) | Authoritative. Where the paper and Java disagree, implement the paper. |
-| `anylogic-model-java.txt` | Reference for algorithm structure: `procRunModel`, `procFleetSizeFixed` (binary search for Q\*), `procCalcDelivCost`, `procFleetSizeCS` (correlated Beta sampling), `F_of_x` | Algorithmic reference only. It is an earlier 6-tier build with placeholder costs. Do not copy its constants. |
+The companion uses the manuscript, supplied Java export, and configurable scenario inputs to support interactive exploration of the study.
 
-### 2.1 Known divergences between the Java and the paper
+| Source | Role |
+| --- | --- |
+| `Two_Sided_Uncertainty___JBL_Minor_Revision_Decision.pdf` | Research background, model notation, propositions, and experiment design. |
+| `anylogic-model-java.txt` | Reference for simulation routines, capacity search, cost calculations, and supply sampling. |
+| `DECISIONS.md` | Browser app settings and design choices. |
 
-The Opus agent must implement the paper's version and expose the Java behavior only behind an explicit `convention` flag where noted. Each item below is also an open question for Vince (Section 12).
+### 2.1 Calculation settings
 
-| # | Topic | Java behavior | Paper behavior | Implement |
-|---|---|---|---|---|
-| D1 | Number of CD tiers | 6 tiers, costs {2,3,5,8,11,15} | 5 tiers, b_i = {8.8, 10.8, 17.3, 22.0, 28.7} R$ | Paper. Make n data-driven (2 to 8 tiers). |
-| D2 | Reliability | None. Raw a, b_i, u used in H(Q) and cost | Expected costs ā = r_priv·a + (1−r_priv)·u and b̄_i = r_CD·b_i + (1−r_CD)·u (Appendix S1) | Paper. |
-| D3 | Cheap-tier transformation | None. H(Q) first term is (b_1 − 0)·F(Q), i.e. b̄_0 = 0 | b̄_0 = v. Tiers with b_i < v are consumed first; demand is transformed D = max(D̃ − Σ_{i≤w} B_i, 0) and those tiers are removed (Appendix S1) | Paper. Add `convention: 'paper' \| 'legacyJava'` in the sim core for reconciliation runs only. |
-| D4 | Demand CDF | Truncated normal on [0, μ+3σ] (`F_of_x`) | Normal, D ~ Norm(μ, σ) | Sample D̃ from normal truncated at 0 (negative demand is meaningless). Use the same truncated CDF in H(Q) for internal consistency. Expose `demandTruncation: 'none' \| 'zero' \| 'zeroAnd3Sigma'`. Default `'zero'`. |
-| D5 | Beta scaling | Beta sampled on [0,1], `Math.round(x·10000)/100` (scale 100) | Beta on [0,1] multiplied by 1000 (Appendix S2) | Paper (×1000). |
-| D6 | Tier-specific Beta parameters | One (α, β) pair per CV level shared by all tiers | Per-tier (α_i, β_i) derived from each tier's empirical mean and target CV (Table S2.1) | Paper. Derive α, β at runtime from μ_i and CV_S; do not hardcode Table S2.1. Table S2.1 is a test oracle. |
-| D7 | Critical fractile RHS | (p − a) with raw a; H(Q) not divided by (u − v) | (u − a)/(u − v); Appendix uses expected costs | Use (u − ā)/(u − v) with H(Q) normalized by (u − v). These are algebraically the same ordering; the normalized form matches the paper's text. |
-| D8 | Q\* rounding | Integer binary search with a post-hoc lower-bound check and +1 nudge | "smallest Q ∈ R+ satisfying H(Q) ≥ RHS" | Integer Q. Return the smallest integer Q with H(Q) ≥ RHS by binary search on [0, ceil(μ + 4σ)]. Drop the Java's ad hoc nudge logic. |
-| D9 | Tier 5 mean capacity | n/a | Table 5 says B_5 = 4.2; Table S2.1 says μ_5 ÷ 1000 = 0.0420 (i.e. 42.0) | Default to 42.0 (S2.1 is the operational table) and surface as an editable field. **Vince to confirm.** |
+Expose editable crowd tiers, reliability-adjusted costs, demand distribution options, and supply synchronization. Default to five crowd tiers, with 2–8 tiers supported. Keep fixed fleet planning and conditional capacity outputs clearly labeled. The advanced Java cost setting provides an additional way to explore capacity calculations.
 
-### 2.2 Modeling artifact to replicate, not fix
+### 2.2 Supply synchronization
 
-Under Eq. (2), B_i = (1−ρ)·Beta(α_i, β_i) + ρ·Beta(α_common, β_common), where the common distribution has mean 322.1 deliveries (a weighted average). At ρ = 1.0 every tier therefore has mean 322.1, so total CD capacity rises from about 525 at ρ = 0 to about 1,610 at ρ = 1. This is why Q\* collapses toward zero in the ρ = 1.0 panels of Figures 5 and 6. Replicate this exactly because it is what the published figures show. Add a one-line note in the UI's methodology panel. Do not "correct" it without sign-off.
+The synchronization control mixes tier-specific and shared supply draws. Describe ρ as the weight assigned to shared availability and show the resulting capacity distribution for the visitor's chosen scenario.
 
 ---
 
@@ -149,7 +140,7 @@ for k in 1..iterations:
        D = max(D̃ − S_w, 0)
        Remaining tiers N' = {w+1..n}, re-indexed 1..m with costs b̄'_i and capacities B'_i
        Remaining-demand CDF: F(x) = F_D̃(x + S_w) for x ≥ 0
-     (convention 'legacyJava': w = 0, b̄_0 = 0, no transformation; used only for reconciliation)
+     (convention 'legacyJava': w = 0, b̄_0 = 0, no transformation; alternative app calculation setting)
   5. Critical fractile (Appendix S1):
        b̄'_0 = v,  b̄'_{m+1} = u
        C_i = Σ_{j≤i} B'_j,  C_0 = 0
@@ -221,9 +212,9 @@ Report mean total cost and a 95% CI for each policy.
 | Fleet comparison | CV_S × ρ at empirical CV_D = 0.34 | 15 | Figure S3.1 |
 | 3PL (v2) | Exp 1 × {no 3PL, 3PL} | 150 | Figure S5.1 |
 
-Sweeps run at a user-set iteration count (default 300 for interactive, 1,000 for "paper fidelity"). Results cache in memory keyed by a hash of params; the app ships with a precomputed JSON of all paper-default sweeps at 1,000 iterations so the Figures tab renders instantly on load.
+Sweeps run at a user-set iteration count (default 300 for interactive, 1,000 for detailed exploration). Results cache in memory keyed by a hash of params; the app ships with a precomputed JSON of all paper-default sweeps at 1,000 iterations so the Figures tab renders instantly on load.
 
-Exp 3 note: the paper varies a but does not say how l and v split. Default: hold v = 17.6, set l = a − v (which goes negative at a = 6.6). That is mathematically fine for the model since only a and v enter. Show a footnote.
+Private-cost sensitivity: scale labor and operating components proportionally as the visitor changes total private cost. Describe this app setting alongside the experiment.
 
 ---
 
@@ -269,7 +260,7 @@ Five cards, P1 through P5, each with the proposition text verbatim from the pape
 
 ### 5.4 Methodology
 
-Rendered markdown: model description in the app's own words, the H(Q) and G(Q,D,B) equations in KaTeX, the divergence table from Section 2.1 of this PRD, the ρ = 1 artifact note, citation block for the paper, link to the repo, and version and commit hash.
+Rendered markdown: model description in the app's own words, the H(Q) and G(Q,D,B) equations in KaTeX, the app settings from Section 2.1 and an explanation of supply synchronization, citation block for the paper, link to the repo, and version and commit hash.
 
 ### 5.5 Your Data (v1.1, ship if time allows)
 
@@ -286,7 +277,7 @@ Paste or upload a CSV of daily demand and per-tier daily capacity. App computes 
 - Keyboard-operable sliders with arrow-key steps. All controls labeled for screen readers.
 - No modal dialogs. Errors and warnings appear inline under the offending control.
 - Loading state: skeleton, never a blank chart.
-- Header: app title, "Based on Castillo et al. (Journal of Business Logistics)" with link, GitHub link, version.
+- Header: app title, "Based on Castillo, Posner, Sodero, and Zinn (Journal of Business Logistics)" with link, GitHub link, version.
 - Footer note that this is a research demonstration, not operational advice.
 
 ---
@@ -304,46 +295,19 @@ Use a worker pool sized to `navigator.hardwareConcurrency − 1` (min 1, max 8) 
 
 ---
 
-## 8. Validation targets (acceptance tests)
+## 8. Software verification
 
-The Opus agent owns these. A build does not ship until all pass. Tolerances account for Monte Carlo noise at 1,000 iterations; run each test with three seeds and require all three to pass.
+### 8.1 Numerical and accounting checks
 
-### 8.1 Deterministic checks (exact)
+Test normal CDF reference values, Beta shapes and sample moments, seeded random streams, monotonic capacity search, allocation conservation, cost identities, demand integration, and cost-curve minima. Include deterministic, zero-demand, and high-variability cases.
 
-| Test | Expected |
-|---|---|
-| ā at paper defaults | 20.5 (0.986·20.3 + 0.014·35.1 = 20.5052) |
-| b̄ at paper defaults | {9.30, 11.26, 17.64, 22.25, 28.82} |
-| Cheap tiers at paper defaults | w = 3 (tiers costing 8.8, 10.8, 17.3) |
-| Mean cheap capacity at CV_S = 0, ρ = 0 | 415.3 |
-| Q\* at CV_D = 0, CV_S = 0, ρ = 0 | 345 (= ceil(759.9 − 415.3)); this is Figure 4's leftmost point |
-| RHS at paper defaults | (35.1 − 20.5052)/(35.1 − 17.6) = 0.8340 |
-| betaParams(0.3898, 0.2·0.3898) | α ≈ 14.87, β ≈ 23.27 (Table S2.1) |
-| betaParams(0.0165, 0.8·0.0165) | α ≈ 1.52, β ≈ 90.61 |
-| Common mean | 322.1 when tiers are at paper defaults with B_5 = 42.0. If B_5 = 4.2 the weighted mean differs; the test must document which value it assumes. |
-| H(Q) monotone | For 200 random scenarios, H(Q+1) ≥ H(Q) for all Q |
-| G identity | For 1,000 random (Q, D, B), step-6 component sum equals the Appendix S1 closed form plus cheap spend, within 1e-6 |
+### 8.2 App behavior checks
 
-### 8.2 Stochastic checks (tolerance)
+Verify valid input handling, fleet comparisons on common draws, experiment cell counts, worker completion, animation playback, chart exports, sharing, and desktop/mobile layout. Keep the core tests in `packages/core/test/model.test.ts`.
 
-| Test | Expected (paper) | Tolerance |
-|---|---|---|
-| Table 7, CV_D=0.2, CV_S=0.2 | Q\* = 345.0, avg CD unit cost 11.3 | ±4% on Q\*, ±0.5 on cost |
-| Table 7, CV_D=0.2, CV_S=0.8 | Q\* = 371.7, CD cost 12.9 | same |
-| Table 7, CV_D=0.8, CV_S=0.2 | Q\* = 416.9, CD cost 11.2 | same |
-| Table 7, CV_D=0.8, CV_S=0.8 | Q\* = 406.4, CD cost 12.6 | same |
-| Empirical case CV_D=0.34, CV_S=0.36, ρ=0 | Q\* = 345 (Section 4 text) | ±4% |
-| Figure 4 shape | At CV_S = 0.8, Q\*(CV_D=0) > Q\*(CV_D=0.6) < Q\*(CV_D=0.8) (U-shape); at CV_S ≤ 0.4, Q\* monotone nondecreasing in CV_D | strict inequality on cell means |
-| Figure 5, ρ = 1, CV_S = 0 | Q\* ≈ 0 for all CV_D | mean < 5 |
-| Figure 5, ρ = 0.5, CV_S = 0, CV_D = 0.2 | Q\* ≈ 50 | ±15 |
-| Figure S3.1 | PD-only cost > Hybrid cost at every cell; CD-only cost > Hybrid cost at ρ = 0 for CV_S ≥ 0.2 | per cell |
-| Figure S4.1, a = 34.0, CV_D ≥ 0.4 | Q\* ≈ 0 | mean < 5 |
+### 8.3 Software report
 
-If a stochastic check fails only under `convention: 'paper'` but passes under `'legacyJava'`, do not flip the default. Record it in `VALIDATION.md` and raise it in the handoff notes; Vince decides.
-
-### 8.3 Reconciliation report
-
-`npm run validate` produces `VALIDATION.md`: a table of every check above with pass/fail, observed vs expected, seed, and a note on which convention was used. This file is the primary artifact the Opus agent hands back.
+`npm run validate` runs the app's software tests and writes their status to `VALIDATION.md`. `npm run compare-settings` generates examples of the app's calculation settings in `CALCULATION_SETTINGS.md`.
 
 ---
 
@@ -406,13 +370,13 @@ two-sided-uncertainty-app/
 ### Phase 0: Alignment (Opus, half day)
 - Read the paper Sections 3, Appendix S1 and S2, and the Java `procFleetSizeFixed`, `procCalcDelivCost`, `procFleetSizeCS`.
 - Write `packages/core/src/types.ts` and `presets.ts`. Commit the interfaces before any UI work starts so Sonnet can build against them with a mocked worker.
-- Confirm or adjust the divergence table (Section 2.1) in a short `DECISIONS.md`.
+- Document the app settings from Section 2.1 in `DECISIONS.md`.
 
 ### Phase 1: Core (Opus, 2 days)
 - Numerics (`rng.ts`, `dist/`) with tests against known values.
 - `model/*` in the order listed in Section 9. Unit test each.
 - `scenario.ts`, `sweep.ts`, `fleet.ts`, `costCurve.ts`.
-- `scripts/validate.ts`; get every Section 8.1 check green, then 8.2.
+- `scripts/validate.ts`; run the software checks described in Section 8.
 - `scripts/precompute.ts`.
 - Deliver: core package with `VALIDATION.md`.
 
@@ -451,28 +415,21 @@ Ownership rule: Sonnet does not edit `packages/core/src/model/*`. Opus does not 
 
 ---
 
-## 12. Open questions for Vince
+## 12. Product settings and future choices
 
-Agents should proceed with the stated defaults and not block on these, but the handoff must restate any that remain unanswered.
-
-1. **B_5 mean capacity:** 4.2 (Table 5) or 42.0 (Table S2.1)? Default in this PRD: 42.0.
-2. **Cost convention:** confirm the paper's Appendix S1 (with b̄_0 = v and the cheap-tier transformation) is what generated the published figures, since the supplied Java predates it. If the published Java differs, can you share the later build?
-3. **Demand truncation:** normal truncated at zero (default) or the Java's [0, μ+3σ]?
-4. **ρ = 1 capacity inflation:** replicate as-is (default) or add an optional "mean-preserving correlation" mode as a v2 toggle?
-5. **PD-only rule for Appendix S3:** what Q did the paper use for the PD-only fleet? Default: ceil(μ + 2.33σ).
-6. **Exp 3 split of a into l and v:** hold v fixed (default) or scale both proportionally?
-7. **Audience emphasis:** is the first ship for the classroom, the MHI sessions, or reviewers? It changes which tab is default and how much text sits on the Explorer.
-8. **Hosting and naming:** GitHub Pages under your account, a Fisher subdomain, or Castle Analytics? Working title "Two-Sided Uncertainty Capacity Planner"; alternatives welcome.
-9. **Attribution:** list all co-authors in the header, and is the JBL citation final enough to display?
-10. **AffordableMeals data:** the "Your Data" tab is designed to be client-side only. Is a sanitized sample CSV from the study acceptable to ship as an example, or should the example be synthetic?
+- **Authorship:** Castillo, Posner, Sodero, and Zinn.
+- **Hosting:** GitHub Pages at https://professorcastillo.github.io/hybrid-fleets/.
+- **Default scenarios:** Keep tier capacities, costs, demand settings, and the private-only buffer editable.
+- **Audience:** Support classrooms, research readers, and delivery planners exploring scenarios.
+- **Future data features:** Keep CSV exploration in the browser and provide synthetic examples.
 
 ---
 
 ## 13. Definition of done
 
-- All Section 8.1 checks pass; all 8.2 checks pass under `convention: 'paper'` or are documented as open in `VALIDATION.md`.
+- The software checks in Section 8 pass and are documented in `VALIDATION.md`.
 - Explorer, Figures, Propositions, Methodology tabs functional on desktop and phone.
-- Figures tab reproduces the visual shape of Figures 4, 5, 6, S3.1, S4.1 at paper defaults from precomputed data.
+- The experiment tab displays all five experiment designs and supports precomputed and visitor-configured scenarios.
 - `npm run build` produces a static bundle under 600 kB gzipped; deploy workflow green.
 - README explains how to change the paper defaults in one file (`presets.ts`).
 - Core package has no runtime dependencies and ≥ 90% test coverage.

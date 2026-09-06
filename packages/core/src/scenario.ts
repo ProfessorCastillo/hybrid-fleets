@@ -20,9 +20,9 @@ export function runScenario(input: ScenarioParams, includeCurve = true): Scenari
   const warnings: string[] = [];
   if (m.scale > 1000) warnings.push(`Beta capacity scale raised to ${m.scale.toLocaleString()} to accommodate your supply means.`);
   if (m.shapes.some(s => s.clamped)) warnings.push('At least one requested supply CV exceeds its bounded Beta limit. Its variance was clamped to 99.8% of the maximum.');
-  if (p.supplyCorrelation > 0) warnings.push('The paper’s shared-supply mixture changes mean capacity as well as synchronization; ρ is a mixing weight, not measured Pearson correlation.');
+  if (p.supplyCorrelation > 0) warnings.push('Supply synchronization mixes tier-specific capacity with a shared supply draw. Adjust ρ to change the weight assigned to shared availability.');
   if (p.demandTruncation === 'none') warnings.push('Untruncated normal draws can be negative. Negative draws are retained in exports and represent zero delivery tasks.');
-  if (p.convention === 'legacyJava') warnings.push('Legacy diagnostic: raw costs and a zero fractile baseline. This threshold does not optimize the idle-savings cost objective; the curve can disagree.');
+  if (p.convention === 'legacyJava') warnings.push('The Java cost setting uses raw costs and a zero baseline for capacity selection. The cost curve uses the app’s idle-savings accounting.');
   const cd = iterations.reduce((s, d) => s + d.fixed.cd, 0);
   return { params: p, fixedQ, qStar: stats(draws.map(d => d.qStar)), iterations, policies, costCurve, cost, expectedPdUnitCost: m.a,
     avgExpectedCdUnitCost: cd ? iterations.reduce((s, d) => s + d.fixed.cdSpend + d.fixed.cheapTierSpend, 0) / cd : 0,

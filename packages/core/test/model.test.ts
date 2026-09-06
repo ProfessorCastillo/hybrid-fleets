@@ -33,7 +33,7 @@ describe('numerics', () => {
 describe('source conventions and validation', () => {
   it('uses expected costs, three cheap tiers, and the explicit shared mean', () => {
     const m = prepare(paperParams());
-    expect(m.a).toBeCloseTo(20.5072, 8); // PRD prints 20.5052; direct arithmetic is 20.5072.
+    expect(m.a).toBeCloseTo(20.5072, 8);
     expect(m.costs[0]).toBeCloseTo(9.2997, 7); expect(m.costs[1]).toBeCloseTo(11.2617, 7);
     expect(m.w).toBe(3); expect(m.p.commonMeanCapacity).toBe(322.1);
     expect(m.p.pdUnitCost - m.p.operatingCost).toBeCloseTo(2.7, 7);

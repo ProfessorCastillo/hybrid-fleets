@@ -11,7 +11,7 @@
     "test:coverage": "vitest run --coverage",
     "validate": "node --import tsx scripts/validate.ts",
     "precompute": "node --import tsx scripts/precompute.ts",
-    "reconcile": "node --import tsx scripts/reconcile.ts"
+    "compare-settings": "node --import tsx scripts/compare-settings.ts"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
